@@ -1,0 +1,17 @@
+# Ignore raw training datasets (too large for GitHub)
+dataset/raw/
+dataset/train/
+dataset/val/
+dataset/test/
+
+# Python cache & virtual environments
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
+
+# Temporary outputs
+outputs/latest_gradcam.jpg
+outputs/user_uploaded_leaf.jpg
+outputs/live_camera_leaf.jpg
