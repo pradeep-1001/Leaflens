@@ -1,811 +1,569 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LeafLens AI Pro | Smart Grapevine Health & Disease Diagnostics</title>
+    <title>LeafLens AI Pro | Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    },
-                    colors: {
-                        grape: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            500: '#10b981',
-                            600: '#059669',
-                            700: '#047857',
-                            800: '#065f46',
-                            900: '#064e3b',
-                            950: '#022c22',
-                        }
-                    }
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
                 }
             }
         }
     </script>
     <style>
-        .glass {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        .hero-pattern {
-            background-color: #064e3b;
-            background-image: radial-gradient(#10b981 0.75px, transparent 0.75px), radial-gradient(#10b981 0.75px, #064e3b 0.75px);
-            background-size: 30px 30px;
-            background-position: 0 0, 15px 15px;
-            background-opacity: 0.05;
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        input[type=range] { -webkit-appearance: none; height: 6px; border-radius: 4px; background: #334155; outline: none; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #10b981; cursor: pointer; border: 2px solid #064e3b; }
+        input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #10b981; cursor: pointer; border: 2px solid #064e3b; }
+        .sample-btn { transition: all 0.2s; }
+        .sample-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(16,185,129,0.25); }
+        .sample-btn.active { ring: 2px; border-color: #10b981; background: rgba(16,185,129,0.1); }
+        .glass { background: rgba(15,23,42,0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        @keyframes pulse-glow { 0%,100% { box-shadow: 0 0 8px rgba(16,185,129,0.3); } 50% { box-shadow: 0 0 20px rgba(16,185,129,0.6); } }
+        .live-dot { animation: pulse-glow 2s ease-in-out infinite; }
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #0f172a; } ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans antialiased selection:bg-emerald-500 selection:text-white">
+<body class="bg-slate-950 text-white min-h-screen">
 
-    <!-- NAVBAR -->
-    <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-slate-200/80 transition-all">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-11 h-11 bg-gradient-to-tr from-emerald-600 to-teal-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-600/20 text-white font-bold text-2xl">
-                    🍇
+    <!-- TOP NAVBAR -->
+    <nav class="sticky top-0 z-50 glass border-b border-slate-800">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-600/20">
+                    <i data-lucide="leaf" class="w-5 h-5 text-white"></i>
                 </div>
                 <div>
-                    <span class="text-xl font-extrabold tracking-tight text-slate-900">LeafLens <span class="text-emerald-600">AI Pro</span></span>
-                    <span class="hidden md:inline-block ml-2 px-2.5 py-0.5 text-xs font-semibold bg-emerald-100 text-emerald-800 rounded-full border border-emerald-200">v1.0 • Nashik Belt</span>
+                    <h1 class="text-base font-extrabold tracking-tight leading-none">LeafLens AI Pro</h1>
+                    <p class="text-[10px] text-slate-400 font-medium tracking-wide">GRAPEVINE DISEASE DETECTION & HEALTH MONITORING</p>
                 </div>
             </div>
-
-            <div class="hidden md:flex items-center space-x-8 font-medium text-sm text-slate-600">
-                <a href="#problem" class="hover:text-emerald-600 transition">The Problem</a>
-                <a href="#scanner" class="hover:text-emerald-600 transition">Live AI Scanner</a>
-                <a href="#hardware" class="hover:text-emerald-600 transition">IoT Chamber</a>
-                <a href="#team" class="hover:text-emerald-600 transition">Our Team</a>
-                <a href="http://localhost:8000/docs" target="_blank" class="hover:text-emerald-600 transition flex items-center gap-1">
-                    API Docs <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-                </a>
-            </div>
-
-            <div class="flex items-center space-x-3">
-                <a href="http://localhost:8501" target="_blank" class="inline-flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-md shadow-emerald-600/25 transition">
-                    <i data-lucide="camera" class="w-4 h-4"></i>
-                    <span>Open Dashboard</span>
-                </a>
+            <div class="flex items-center gap-3">
+                <!-- Live Weather Badge -->
+                <div id="navWeatherBadge" class="hidden sm:flex items-center gap-2 bg-slate-800/80 border border-slate-700 rounded-full px-3 py-1.5">
+                    <div class="w-2 h-2 rounded-full bg-emerald-400 live-dot"></div>
+                    <span id="navWeatherText" class="text-xs text-slate-300">Detecting weather...</span>
+                </div>
+                <button onclick="toggleLang()" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-1.5 rounded-full font-semibold transition">
+                    <span id="langLabel">EN</span> / <span class="text-slate-500">MR</span>
+                </button>
             </div>
         </div>
     </nav>
 
-    <!-- HERO SECTION -->
-    <header class="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-gradient-to-b from-slate-900 via-emerald-950 to-slate-950 text-white">
-        <div class="absolute inset-0 opacity-15 hero-pattern pointer-events-none"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-            
-            <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm font-semibold mb-6">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>Optimized for Niphad & Nashik Grape Vineyards</span>
+    <!-- MAIN DASHBOARD -->
+    <main class="max-w-[1600px] mx-auto px-4 sm:px-6 py-5">
+
+        <!-- KPI TOP ROW -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5 fade-in">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 text-center">
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Health Score</p>
+                <p id="kpiHealth" class="text-3xl font-black text-emerald-400">--</p>
+                <span id="kpiBadge" class="inline-block text-[10px] font-bold px-2.5 py-0.5 mt-1.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">WAITING</span>
             </div>
-
-            <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight max-w-4xl mx-auto leading-tight md:leading-none">
-                AI + IoT Grapevine <br class="hidden sm:inline">
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-green-300">Disease Detection & Health Monitoring</span>
-            </h1>
-
-            <p class="mt-6 text-lg md:text-xl text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed">
-                Combining controlled imaging chambers, environmental sensor telemetry, and deep learning explainability to protect grape harvests from devastating pathogens.
-            </p>
-
-            <div class="mt-10 flex flex-wrap justify-center gap-4">
-                <a href="#scanner" class="inline-flex items-center space-x-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-7 py-4 rounded-xl shadow-lg shadow-emerald-500/30 transition-transform transform hover:-translate-y-0.5">
-                    <i data-lucide="sparkles" class="w-5 h-5"></i>
-                    <span>Try Interactive AI Scanner</span>
-                </a>
-                <a href="http://localhost:8501" target="_blank" class="inline-flex items-center space-x-2 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-white font-semibold px-6 py-4 rounded-xl transition">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
-                    <span>Live Farmer Dashboard</span>
-                </a>
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 text-center">
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Diagnosis</p>
+                <p id="kpiDisease" class="text-lg font-extrabold text-white mt-1 truncate">Select a sample</p>
+                <span id="kpiConf" class="text-[10px] font-bold text-emerald-400 mt-1 inline-block">--</span>
             </div>
-
-            <!-- KEY STATS ROW -->
-            <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto text-left">
-                <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-5">
-                    <p class="text-3xl font-extrabold text-emerald-400">98.5%</p>
-                    <p class="text-xs font-medium text-slate-400 mt-1">Validation Accuracy on Real Niphad Dataset</p>
-                </div>
-                <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-5">
-                    <p class="text-3xl font-extrabold text-teal-400">&lt; 1.5s</p>
-                    <p class="text-xs font-medium text-slate-400 mt-1">Edge Diagnostic & Grad-CAM Heatmap Speed</p>
-                </div>
-                <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-5">
-                    <p class="text-3xl font-extrabold text-green-400">4-Way</p>
-                    <p class="text-xs font-medium text-slate-400 mt-1">Multi-Modal Fusion (Image + Temp + RH + VPD)</p>
-                </div>
-                <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-5">
-                    <p class="text-3xl font-extrabold text-amber-400">ICAR-NRCG</p>
-                    <p class="text-xs font-medium text-slate-400 mt-1">Aligned Spray Schedules (English & Marathi)</p>
-                </div>
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 text-center">
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">VPD (kPa)</p>
+                <p id="kpiVpd" class="text-3xl font-black text-teal-400">--</p>
+                <span id="kpiVpdStatus" class="text-[10px] font-bold text-slate-400 mt-1 inline-block">--</span>
             </div>
-
-        </div>
-    </header>
-
-    <!-- THE PROBLEM & DIFFERENTIATION -->
-    <section id="problem" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-xs font-bold text-emerald-600 tracking-wider uppercase">The Viticulture Challenge</h2>
-                <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">Why Standard Plant Apps Fail in Indian Vineyards</h3>
-                <p class="text-slate-600 mt-4 text-base">In the Nashik grape belt, early symptoms of Downy Mildew, Powdery Mildew, and Bacterial Canker look identical under unpredictable sunlight and harsh shadows.</p>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-8 hover:shadow-lg transition">
-                    <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center text-red-600 mb-6 font-bold text-xl">
-                        🚨
-                    </div>
-                    <h4 class="text-xl font-bold text-slate-900">Devastating Crop Losses</h4>
-                    <p class="text-slate-600 mt-3 text-sm leading-relaxed">
-                        Downy Mildew (<em>Kevda</em>) can destroy up to 80% of a vineyard's export yield within 5 days of warm, humid rainfall. Preemptive indiscriminate spraying increases pesticide residue rejection rates.
-                    </p>
-                </div>
-
-                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-8 hover:shadow-lg transition">
-                    <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600 mb-6 font-bold text-xl">
-                        ☀️
-                    </div>
-                    <h4 class="text-xl font-bold text-slate-900">Outdoor Lighting Noise</h4>
-                    <p class="text-slate-600 mt-3 text-sm leading-relaxed">
-                        Direct sunlight causes specular glares on waxy grape leaf cuticles, causing standard smartphone AI models to confuse healthy light reflections with fungal powdery patches.
-                    </p>
-                </div>
-
-                <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-8 hover:shadow-lg transition">
-                    <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 mb-6 font-bold text-xl">
-                        💡
-                    </div>
-                    <h4 class="text-xl font-bold text-slate-900">The LeafLens Solution</h4>
-                    <p class="text-slate-600 mt-3 text-sm leading-relaxed">
-                        A controlled-illumination scanning chamber (CRI 95+ LED at 45°) + Sensirion environmental sensors. Visual diagnosis is dynamically verified against microclimate infection biology.
-                    </p>
-                </div>
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 text-center">
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Risk Level</p>
+                <p id="kpiRisk" class="text-lg font-extrabold text-slate-400 mt-1">--</p>
+                <span id="kpiRiskDetail" class="text-[10px] font-bold text-slate-500 mt-1 inline-block">Analyze to assess</span>
             </div>
         </div>
-    </section>
 
-    <!-- INTERACTIVE AI SCANNER TERMINAL -->
-    <section id="scanner" class="py-20 bg-slate-900 text-white relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="px-3 py-1 text-xs font-bold bg-emerald-500/20 text-emerald-300 rounded-full border border-emerald-500/30">Interactive Diagnostic Terminal</span>
-                <h2 class="text-3xl md:text-5xl font-extrabold mt-3">Test LeafLens AI Pro Right Now</h2>
-                <p class="text-slate-400 mt-3">Upload a grape leaf photo or pick an authentic Niphad sample to test the AI classifier, Grad-CAM heatmaps, and ICAR-NRCG advisory.</p>
-            </div>
+        <!-- MAIN 2-COLUMN LAYOUT -->
+        <div class="grid lg:grid-cols-12 gap-4">
 
-            <div class="grid lg:grid-cols-12 gap-8 bg-slate-800/80 border border-slate-700/80 rounded-3xl p-6 md:p-8 shadow-2xl backdrop-blur-sm">
-                
-                <!-- INPUT COLUMN -->
-                <div class="lg:col-span-5 space-y-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-300 mb-2">1. Select Leaf Sample or Upload Image</label>
-                        <div class="grid grid-cols-2 gap-2 mb-3">
-                            <button onclick="selectSample('Downy_Mildew')" class="sample-btn px-3 py-2.5 text-xs font-semibold rounded-xl bg-slate-700 hover:bg-emerald-600 text-left transition flex items-center gap-2 border border-slate-600">
-                                <span>🍂</span> Downy Mildew
-                            </button>
-                            <button onclick="selectSample('Healthy')" class="sample-btn px-3 py-2.5 text-xs font-semibold rounded-xl bg-slate-700 hover:bg-emerald-600 text-left transition flex items-center gap-2 border border-slate-600">
-                                <span>🌿</span> Healthy Leaf
-                            </button>
-                            <button onclick="selectSample('Powdery_Mildew')" class="sample-btn px-3 py-2.5 text-xs font-semibold rounded-xl bg-slate-700 hover:bg-emerald-600 text-left transition flex items-center gap-2 border border-slate-600">
-                                <span>🌫️</span> Powdery Mildew
-                            </button>
-                            <button onclick="selectSample('Bacterial_Leaf_Spot')" class="sample-btn px-3 py-2.5 text-xs font-semibold rounded-xl bg-slate-700 hover:bg-emerald-600 text-left transition flex items-center gap-2 border border-slate-600">
-                                <span>🟤</span> Bacterial Canker
-                            </button>
-                        </div>
-                        
-                        <label class="block border-2 border-dashed border-slate-600 rounded-2xl p-4 text-center cursor-pointer hover:border-emerald-500 transition bg-slate-900/50">
-                            <i data-lucide="upload-cloud" class="w-7 h-7 mx-auto text-slate-400 mb-2"></i>
-                            <span class="text-xs text-slate-300 font-medium">Click to upload custom leaf photo</span>
-                            <input type="file" id="leafFileInput" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
-                        </label>
-                    </div>
+            <!-- LEFT PANEL: Controls -->
+            <div class="lg:col-span-4 xl:col-span-3 space-y-4 fade-in">
 
-                    <!-- ENVIRONMENTAL SENSORS — AUTO WEATHER + MANUAL -->
-                    <div class="bg-slate-900/70 border border-slate-700/70 rounded-2xl p-5 space-y-4">
-                        <!-- Header with Auto/Manual Toggle -->
-                        <div class="flex items-center justify-between">
-                            <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                                <i data-lucide="thermometer" class="w-4 h-4"></i>
-                                Environmental Sensors
-                            </h4>
-                            <div class="flex items-center gap-2">
-                                <span id="weatherSourceBadge" class="text-xs bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-800 flex items-center gap-1">
-                                    <i data-lucide="wifi" class="w-3 h-3"></i>
-                                    <span id="weatherSourceText">Detecting...</span>
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- Auto Weather Status Banner -->
-                        <div id="weatherAutoBar" class="bg-emerald-950/60 border border-emerald-800/50 rounded-xl px-3 py-2.5 flex items-center justify-between">
-                            <div class="flex items-center gap-2 min-w-0">
-                                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-400 flex-shrink-0"></i>
-                                <span id="weatherLocation" class="text-xs text-emerald-200 truncate">Detecting your location...</span>
-                            </div>
-                            <button onclick="toggleWeatherMode()" id="weatherToggleBtn" class="flex-shrink-0 ml-2 text-[10px] font-bold uppercase tracking-wide bg-slate-700 hover:bg-slate-600 text-slate-200 px-2.5 py-1 rounded-md transition">
-                                Manual
-                            </button>
-                        </div>
-
-                        <!-- Temperature -->
-                        <div>
-                            <div class="flex justify-between text-xs font-medium mb-1">
-                                <span class="text-slate-400">Temperature</span>
-                                <span id="tempValue" class="text-white font-bold">24.5 °C</span>
-                            </div>
-                            <input type="range" id="tempSlider" min="5" max="50" value="24.5" step="0.5" class="w-full accent-emerald-500 cursor-pointer" oninput="onManualSliderChange()">
-                        </div>
-
-                        <!-- Relative Humidity -->
-                        <div>
-                            <div class="flex justify-between text-xs font-medium mb-1">
-                                <span class="text-slate-400">Relative Humidity</span>
-                                <span id="rhValue" class="text-white font-bold">85 %</span>
-                            </div>
-                            <input type="range" id="rhSlider" min="5" max="100" value="85" step="1" class="w-full accent-emerald-500 cursor-pointer" oninput="onManualSliderChange()">
-                        </div>
-
-                        <!-- Live Weather Details Row (shown in auto mode) -->
-                        <div id="weatherDetailsRow" class="grid grid-cols-3 gap-2">
-                            <div class="bg-slate-800/60 rounded-lg p-2 text-center">
-                                <span class="text-[10px] text-slate-400 uppercase block">Wind</span>
-                                <span id="weatherWind" class="text-xs text-white font-bold">-- km/h</span>
-                            </div>
-                            <div class="bg-slate-800/60 rounded-lg p-2 text-center">
-                                <span class="text-[10px] text-slate-400 uppercase block">Cloud Cover</span>
-                                <span id="weatherCloud" class="text-xs text-white font-bold">--%</span>
-                            </div>
-                            <div class="bg-slate-800/60 rounded-lg p-2 text-center">
-                                <span class="text-[10px] text-slate-400 uppercase block">Est. Lux</span>
-                                <span id="weatherLux" class="text-xs text-white font-bold">-- lx</span>
-                            </div>
-                        </div>
-
-                        <!-- Dew / Wetness -->
-                        <div class="flex items-center justify-between pt-1">
-                            <span class="text-xs text-slate-300 font-medium">Leaf Surface Dew / Wetness</span>
-                            <input type="checkbox" id="dewCheck" checked class="w-4 h-4 accent-emerald-500 rounded cursor-pointer" onchange="updateEnv()">
-                        </div>
-                    </div>
-
-                    <button onclick="runDiagnosticScan()" class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold rounded-2xl shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2 text-base">
-                        <i data-lucide="zap" class="w-5 h-5"></i>
-                        <span>Execute Multi-Modal Analysis</span>
-                    </button>
-                </div>
-
-                <!-- OUTPUT RESULTS COLUMN -->
-                <div class="lg:col-span-7 bg-slate-900/90 border border-slate-700/80 rounded-2xl p-6 flex flex-col justify-between">
-                    
-                    <div>
-                        <!-- TOP KPI ROW -->
-                        <div class="grid grid-cols-3 gap-3 mb-6">
-                            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-3.5 text-center">
-                                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide block">Health Score</span>
-                                <span id="outHealthScore" class="text-2xl md:text-3xl font-black text-emerald-400 mt-1 block">33 / 100</span>
-                                <span id="outHealthBadge" class="inline-block text-[10px] font-bold px-2 py-0.5 mt-1 rounded-full bg-red-500/20 text-red-300 border border-red-500/30">CRITICAL</span>
-                            </div>
-                            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-3.5 text-center">
-                                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide block">Diagnosis</span>
-                                <span id="outDisease" class="text-sm md:text-base font-extrabold text-white mt-1 block truncate">Downy Mildew</span>
-                                <span id="outConfidence" class="inline-block text-[10px] font-bold text-emerald-400 mt-1">100% Confidence</span>
-                            </div>
-                            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-3.5 text-center">
-                                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide block">VPD (kPa)</span>
-                                <span id="outVpd" class="text-2xl md:text-3xl font-black text-teal-400 mt-1 block">0.46</span>
-                                <span id="outVpdStatus" class="inline-block text-[10px] font-bold text-slate-300 mt-1">Low (Wet)</span>
-                            </div>
-                        </div>
-
-                        <!-- VISUAL GRAD-CAM INSPECTION -->
-                        <div class="grid grid-cols-2 gap-4 mb-6">
-                            <div class="text-center">
-                                <p class="text-xs font-semibold text-slate-300 mb-2 flex items-center justify-center gap-1">
-                                    <i data-lucide="eye" class="w-3.5 h-3.5 text-slate-400"></i> Original Leaf Photo
-                                </p>
-                                <div class="aspect-square bg-slate-950 rounded-xl overflow-hidden border border-slate-700 flex items-center justify-center relative">
-                                    <img id="previewOriginal" src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80" class="w-full h-full object-cover">
-                                </div>
-                            </div>
-                            <div class="text-center">
-                                <p class="text-xs font-semibold text-emerald-400 mb-2 flex items-center justify-center gap-1">
-                                    <i data-lucide="activity" class="w-3.5 h-3.5"></i> AI Grad-CAM Lesion Map
-                                </p>
-                                <div class="aspect-square bg-slate-950 rounded-xl overflow-hidden border border-slate-700 flex items-center justify-center relative">
-                                    <img id="previewGradcam" src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80" class="w-full h-full object-cover filter saturate-200 hue-rotate-90">
-                                    <span class="absolute bottom-2 right-2 text-[10px] bg-black/70 px-2 py-0.5 rounded text-slate-300">Active Focus Layer</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ADVISORY BOX -->
-                    <div class="bg-slate-950/80 border-l-4 border-emerald-500 rounded-xl p-4 text-xs space-y-1.5 text-slate-300">
-                        <div class="flex items-center justify-between text-white font-bold mb-1">
-                            <span class="flex items-center gap-1.5 text-emerald-400 text-sm">
-                                <i data-lucide="shield-check" class="w-4 h-4"></i> ICAR-NRCG Spray Advisory
-                            </span>
-                            <span class="text-[10px] text-slate-400 font-mono">Nashik Regional Schedule</span>
-                        </div>
-                        <p id="advisoryText1">• Apply systemic spray: Metalaxyl 8% + Mancozeb 64% WP @ 2.5 g/L water.</p>
-                        <p id="advisoryText2">• De-sucker lower shoots to minimize soil splash inoculation onto foliage.</p>
-                        <p id="advisoryText3">• Ensure canopy aeration by selective shoot thinning.</p>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- HARDWARE SCANNING CHAMBER SPECS -->
-    <section id="hardware" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div>
-                    <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Hardware Engineering</span>
-                    <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">The Scanning Chamber Innovation</h2>
-                    <p class="text-slate-600 mt-4 text-base leading-relaxed">
-                        Designed by <strong>Rachi Gedam</strong>, the LeafLens chamber normalizes vineyard lighting variations into constant, lab-grade spectral conditions directly at the farm boundary.
-                    </p>
-
-                    <div class="mt-8 space-y-4">
-                        <div class="flex items-start space-x-4">
-                            <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 font-bold">1</div>
-                            <div>
-                                <h4 class="font-bold text-slate-900 text-sm">Glare-Free 45° Diffused LED Ring</h4>
-                                <p class="text-slate-600 text-xs mt-1">CRI 95+ 5500K daylight LEDs illuminate leaves at an oblique angle to eliminate specular glare on waxy foliage.</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-start space-x-4">
-                            <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 font-bold">2</div>
-                            <div>
-                                <h4 class="font-bold text-slate-900 text-sm">Sensirion SHT31 Microclimate Array</h4>
-                                <p class="text-slate-600 text-xs mt-1">High-accuracy digital temperature and relative humidity telemetry polled via the hardware I2C bus.</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-start space-x-4">
-                            <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 font-bold">3</div>
-                            <div>
-                                <h4 class="font-bold text-slate-900 text-sm">One-Touch Autonomous Edge Trigger</h4>
-                                <p class="text-slate-600 text-xs mt-1">Single physical button triggers Raspberry Pi camera capture, sensor packaging, and instant REST transmission.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 text-white shadow-2xl border border-slate-700">
-                    <h3 class="text-lg font-bold text-emerald-400 mb-6 flex items-center gap-2">
-                        <i data-lucide="cpu" class="w-5 h-5"></i> Chamber Technical Specifications
+                <!-- LEAF INPUT -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-3 flex items-center gap-1.5">
+                        <i data-lucide="scan-line" class="w-4 h-4"></i>
+                        Leaf Input
                     </h3>
-                    
-                    <div class="space-y-4 text-xs">
-                        <div class="flex justify-between py-2 border-b border-slate-700">
-                            <span class="text-slate-400">Dimensions</span>
-                            <span class="font-mono font-bold text-slate-200">20 x 20 x 25 cm (Matte Black Acrylic)</span>
+
+                    <!-- Sample Selector -->
+                    <p class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider mb-2">Pre-loaded Niphad Samples</p>
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <button onclick="selectSample('Downy_Mildew')" id="btn_Downy_Mildew" class="sample-btn bg-slate-800 hover:bg-slate-750 border border-slate-700 rounded-xl p-2.5 text-left transition">
+                            <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=200&q=60" class="w-full h-16 object-cover rounded-lg mb-1.5" alt="Downy Mildew">
+                            <span class="text-[11px] font-bold text-white block">Downy Mildew</span>
+                            <span class="text-[9px] text-red-400 font-medium">High Severity</span>
+                        </button>
+                        <button onclick="selectSample('Powdery_Mildew')" id="btn_Powdery_Mildew" class="sample-btn bg-slate-800 hover:bg-slate-750 border border-slate-700 rounded-xl p-2.5 text-left transition">
+                            <img src="https://images.unsplash.com/photo-1558693168-c370615b54e0?w=200&q=60" class="w-full h-16 object-cover rounded-lg mb-1.5" alt="Powdery Mildew">
+                            <span class="text-[11px] font-bold text-white block">Powdery Mildew</span>
+                            <span class="text-[9px] text-amber-400 font-medium">Medium Severity</span>
+                        </button>
+                        <button onclick="selectSample('Bacterial_Spot')" id="btn_Bacterial_Spot" class="sample-btn bg-slate-800 hover:bg-slate-750 border border-slate-700 rounded-xl p-2.5 text-left transition">
+                            <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=200&q=60" class="w-full h-16 object-cover rounded-lg mb-1.5" alt="Bacterial Spot">
+                            <span class="text-[11px] font-bold text-white block">Bacterial Spot</span>
+                            <span class="text-[9px] text-orange-400 font-medium">Moderate</span>
+                        </button>
+                        <button onclick="selectSample('Healthy')" id="btn_Healthy" class="sample-btn bg-slate-800 hover:bg-slate-750 border border-slate-700 rounded-xl p-2.5 text-left transition">
+                            <img src="https://images.unsplash.com/photo-1573246123716-6b1782bfc499?w=200&q=60" class="w-full h-16 object-cover rounded-lg mb-1.5" alt="Healthy">
+                            <span class="text-[11px] font-bold text-white block">Healthy</span>
+                            <span class="text-[9px] text-emerald-400 font-medium">No Disease</span>
+                        </button>
+                    </div>
+
+                    <!-- Upload -->
+                    <label class="block border-2 border-dashed border-slate-700 rounded-xl p-3 text-center cursor-pointer hover:border-emerald-500/50 transition bg-slate-800/30">
+                        <i data-lucide="upload-cloud" class="w-5 h-5 mx-auto text-slate-500 mb-1"></i>
+                        <span class="text-[10px] text-slate-400 font-medium block">Upload your own leaf photo</span>
+                        <input type="file" id="leafFileInput" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
+                    </label>
+                </div>
+
+                <!-- ENVIRONMENTAL SENSORS -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                            <i data-lucide="cloud-sun" class="w-4 h-4"></i>
+                            Environment
+                        </h3>
+                        <span id="envBadge" class="text-[10px] bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded-md border border-emerald-800 font-bold flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
+                            <span id="envBadgeText">Detecting...</span>
+                        </span>
+                    </div>
+
+                    <!-- Auto Weather Location Bar -->
+                    <div id="weatherBar" class="bg-slate-800/60 border border-slate-700/50 rounded-xl px-3 py-2 mb-3 flex items-center justify-between">
+                        <div class="flex items-center gap-1.5 min-w-0">
+                            <i data-lucide="map-pin" class="w-3 h-3 text-emerald-400 flex-shrink-0"></i>
+                            <span id="locText" class="text-[11px] text-slate-300 truncate">Detecting location...</span>
                         </div>
-                        <div class="flex justify-between py-2 border-b border-slate-700">
-                            <span class="text-slate-400">Optical Sensor</span>
-                            <span class="font-mono font-bold text-slate-200">Pi Camera Module 3 (Sony IMX708 Autofocus)</span>
+                        <button onclick="toggleWeatherMode()" id="modeBtn" class="flex-shrink-0 ml-2 text-[9px] font-bold uppercase bg-slate-700 hover:bg-slate-600 text-slate-300 px-2 py-1 rounded-md transition tracking-wide">
+                            Manual
+                        </button>
+                    </div>
+
+                    <!-- Temperature -->
+                    <div class="mb-3">
+                        <div class="flex justify-between text-[11px] font-medium mb-1">
+                            <span class="text-slate-400">Temperature</span>
+                            <span id="tempVal" class="text-white font-bold">24.5 &deg;C</span>
                         </div>
-                        <div class="flex justify-between py-2 border-b border-slate-700">
-                            <span class="text-slate-400">Illumination</span>
-                            <span class="font-mono font-bold text-slate-200">CRI 95+ 5500K Diffused Ring @ 45°</span>
+                        <input type="range" id="tempSlider" min="5" max="50" value="24.5" step="0.5" class="w-full" oninput="onSliderChange()">
+                    </div>
+
+                    <!-- Humidity -->
+                    <div class="mb-3">
+                        <div class="flex justify-between text-[11px] font-medium mb-1">
+                            <span class="text-slate-400">Relative Humidity</span>
+                            <span id="rhVal" class="text-white font-bold">65 %</span>
                         </div>
-                        <div class="flex justify-between py-2 border-b border-slate-700">
-                            <span class="text-slate-400">Environmental Telemetry</span>
-                            <span class="font-mono font-bold text-slate-200">SHT31 (Temp/RH) + BH1750 (Lux)</span>
+                        <input type="range" id="rhSlider" min="5" max="100" value="65" step="1" class="w-full" oninput="onSliderChange()">
+                    </div>
+
+                    <!-- Extra Weather Row -->
+                    <div id="extraRow" class="grid grid-cols-3 gap-1.5 mb-3">
+                        <div class="bg-slate-800/50 rounded-lg p-1.5 text-center">
+                            <span class="text-[8px] text-slate-500 uppercase block">Wind</span>
+                            <span id="wWind" class="text-[11px] text-white font-bold">--</span>
                         </div>
-                        <div class="flex justify-between py-2 border-b border-slate-700">
-                            <span class="text-slate-400">Microcontroller</span>
-                            <span class="font-mono font-bold text-slate-200">Raspberry Pi 4B / Zero 2 W</span>
+                        <div class="bg-slate-800/50 rounded-lg p-1.5 text-center">
+                            <span class="text-[8px] text-slate-500 uppercase block">Cloud</span>
+                            <span id="wCloud" class="text-[11px] text-white font-bold">--</span>
                         </div>
-                        <div class="flex justify-between py-2">
-                            <span class="text-slate-400">Interface Protocols</span>
-                            <span class="font-mono font-bold text-emerald-400">I2C (0x44, 0x23) • HTTP REST JSON</span>
+                        <div class="bg-slate-800/50 rounded-lg p-1.5 text-center">
+                            <span class="text-[8px] text-slate-500 uppercase block">Lux</span>
+                            <span id="wLux" class="text-[11px] text-white font-bold">--</span>
+                        </div>
+                    </div>
+
+                    <!-- Dew -->
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] text-slate-300 font-medium">Leaf Surface Dew</span>
+                        <input type="checkbox" id="dewCheck" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer" onchange="updateEnv()">
+                    </div>
+                </div>
+
+                <!-- RUN BUTTON -->
+                <button onclick="runScan()" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold rounded-2xl shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-2 text-sm">
+                    <i data-lucide="zap" class="w-4.5 h-4.5"></i>
+                    Run Multi-Modal Analysis
+                </button>
+            </div>
+
+            <!-- RIGHT PANEL: Results -->
+            <div class="lg:col-span-8 xl:col-span-9 space-y-4 fade-in">
+
+                <!-- GRAD-CAM COMPARISON -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-4 flex items-center gap-1.5">
+                        <i data-lucide="eye" class="w-4 h-4"></i>
+                        Visual Inspection & Grad-CAM Explainability
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="text-center">
+                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Original Leaf</p>
+                            <div class="bg-slate-800 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center border border-slate-700">
+                                <img id="imgOriginal" src="" class="w-full h-full object-cover hidden" alt="Original">
+                                <div id="imgPlaceholder" class="text-center p-6">
+                                    <i data-lucide="image" class="w-12 h-12 text-slate-600 mx-auto mb-2"></i>
+                                    <p class="text-xs text-slate-500">Select a sample or upload a leaf image</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">AI Attention Heatmap (Grad-CAM)</p>
+                            <div class="bg-slate-800 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center border border-slate-700">
+                                <img id="imgGradcam" src="" class="w-full h-full object-cover hidden" alt="Grad-CAM">
+                                <div id="gcPlaceholder" class="text-center p-6">
+                                    <i data-lucide="flame" class="w-12 h-12 text-slate-600 mx-auto mb-2"></i>
+                                    <p class="text-xs text-slate-500">Heatmap shows which regions triggered the AI decision</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ADVISORY + DETAILS ROW -->
+                <div class="grid md:grid-cols-2 gap-4">
+
+                    <!-- SPRAY ADVISORY -->
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-3 flex items-center gap-1.5">
+                            <i data-lucide="shield-check" class="w-4 h-4"></i>
+                            <span id="advTitle">ICAR-NRCG Spray Advisory</span>
+                        </h3>
+                        <div id="advContent" class="space-y-2.5">
+                            <div class="bg-slate-800/60 rounded-xl p-3 border border-slate-700/50">
+                                <p class="text-xs text-slate-400">Run analysis to see treatment recommendations</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ENVIRONMENTAL ANALYSIS -->
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-3 flex items-center gap-1.5">
+                            <i data-lucide="activity" class="w-4 h-4"></i>
+                            Environmental Risk Analysis
+                        </h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center bg-slate-800/60 rounded-xl p-3 border border-slate-700/50">
+                                <span class="text-[11px] text-slate-400">Vapor Pressure Deficit</span>
+                                <span id="envVpd" class="text-sm font-bold text-teal-400">-- kPa</span>
+                            </div>
+                            <div class="flex justify-between items-center bg-slate-800/60 rounded-xl p-3 border border-slate-700/50">
+                                <span class="text-[11px] text-slate-400">Sporulation Risk</span>
+                                <span id="envSpore" class="text-sm font-bold text-slate-400">--</span>
+                            </div>
+                            <div class="flex justify-between items-center bg-slate-800/60 rounded-xl p-3 border border-slate-700/50">
+                                <span class="text-[11px] text-slate-400">Downy Mildew Window</span>
+                                <span id="envDowny" class="text-sm font-bold text-slate-400">--</span>
+                            </div>
+                            <div class="flex justify-between items-center bg-slate-800/60 rounded-xl p-3 border border-slate-700/50">
+                                <span class="text-[11px] text-slate-400">Powdery Mildew Window</span>
+                                <span id="envPowdery" class="text-sm font-bold text-slate-400">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABOUT / TEAM -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div>
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-1 flex items-center gap-1.5">
+                                <i data-lucide="users" class="w-4 h-4"></i> Engineering Team
+                            </h3>
+                            <p class="text-xs text-slate-400">
+                                <span class="text-white font-semibold">Jiya Gavali</span> (AI & Vision) &bull;
+                                <span class="text-white font-semibold">Rachi Gedam</span> (Hardware & IoT) &bull;
+                                <span class="text-white font-semibold">Gargi Shinde</span> (Backend) &bull;
+                                <span class="text-white font-semibold">Gauri Patil</span> (Dashboard & UI)
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-4 text-[10px] text-slate-500">
+                            <span>MobileNetV3-Large</span>
+                            <span class="text-slate-700">|</span>
+                            <span>98.53% Accuracy</span>
+                            <span class="text-slate-700">|</span>
+                            <span>Niphad, Nashik</span>
+                            <span class="text-slate-700">|</span>
+                            <span>2,726 Images</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </main>
 
-    <!-- TEAM SHOWCASE -->
-    <section id="team" class="py-20 bg-slate-50 border-t border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Meet the Creators</span>
-                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">The LeafLens AI Pro Engineering Team</h2>
-                <p class="text-slate-600 mt-3 text-sm">Four specialized roles collaborating to deliver an end-to-end precision viticulture solution.</p>
-            </div>
-
-            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- JIYA -->
-                <div class="bg-white border border-slate-200 rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition">
-                    <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 mx-auto flex items-center justify-center font-bold text-xl mb-4">
-                        JG
-                    </div>
-                    <h4 class="font-bold text-slate-900 text-base">Jiya Gavali</h4>
-                    <p class="text-xs font-semibold text-emerald-600 mt-0.5">AI & Disease Detection</p>
-                    <p class="text-xs text-slate-500 mt-3 leading-relaxed">
-                        Trained MobileNetV3-Large on 2,726 Niphad leaves, implemented Grad-CAM heatmaps, and achieved 98.53% validation accuracy.
-                    </p>
-                </div>
-
-                <!-- RACHI -->
-                <div class="bg-white border border-slate-200 rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition">
-                    <div class="w-16 h-16 rounded-full bg-teal-100 text-teal-700 mx-auto flex items-center justify-center font-bold text-xl mb-4">
-                        RG
-                    </div>
-                    <h4 class="font-bold text-slate-900 text-base">Rachi Gedam</h4>
-                    <p class="text-xs font-semibold text-teal-600 mt-0.5">Hardware & IoT Specialist</p>
-                    <p class="text-xs text-slate-500 mt-3 leading-relaxed">
-                        Engineered the light-tight scanning chamber, SHT31 sensor bus, and the Raspberry Pi edge acquisition firmware.
-                    </p>
-                </div>
-
-                <!-- GARGI -->
-                <div class="bg-white border border-slate-200 rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition">
-                    <div class="w-16 h-16 rounded-full bg-indigo-100 text-indigo-700 mx-auto flex items-center justify-center font-bold text-xl mb-4">
-                        GS
-                    </div>
-                    <h4 class="font-bold text-slate-900 text-base">Gargi Shinde</h4>
-                    <p class="text-xs font-semibold text-indigo-600 mt-0.5">Backend & System Integration</p>
-                    <p class="text-xs text-slate-500 mt-3 leading-relaxed">
-                        Developed the FastAPI REST Gateway, SQLite scan history database, and the ICAR-NRCG agronomic advisory rules engine.
-                    </p>
-                </div>
-
-                <!-- GAURI -->
-                <div class="bg-white border border-slate-200 rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition">
-                    <div class="w-16 h-16 rounded-full bg-amber-100 text-amber-700 mx-auto flex items-center justify-center font-bold text-xl mb-4">
-                        GP
-                    </div>
-                    <h4 class="font-bold text-slate-900 text-base">Gauri Patil</h4>
-                    <p class="text-xs font-semibold text-amber-600 mt-0.5">Dashboard & User Interface</p>
-                    <p class="text-xs text-slate-500 mt-3 leading-relaxed">
-                        Built the responsive web dashboard, live camera capture, 30-day vineyard health trend charts, and Marathi localization.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="bg-slate-950 text-slate-400 py-12 text-xs border-t border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div class="flex items-center space-x-3">
-                <span class="text-xl">🍇</span>
-                <span class="font-bold text-slate-200 text-sm">LeafLens AI Pro</span>
-                <span class="text-slate-600">•</span>
-                <span>Smart Grapevine Health Monitoring</span>
-            </div>
-
-            <div class="flex space-x-6 text-slate-400">
-                <a href="http://localhost:8501" target="_blank" class="hover:text-emerald-400 transition">Farmer Dashboard (:8501)</a>
-                <a href="http://localhost:8000/docs" target="_blank" class="hover:text-emerald-400 transition">REST API Docs (:8000)</a>
-                <a href="#hardware" class="hover:text-emerald-400 transition">Chamber CAD Specs</a>
-            </div>
-
-            <p class="text-slate-500">© 2026 LeafLens AI Pro • Niphad, Nashik Grape Belt</p>
-        </div>
-    </footer>
-
-    <!-- INTERACTIVE SCRIPT -->
     <script>
-        lucide.createIcons();
-
-        let currentClass = 'Downy_Mildew';
-
-        const SAMPLE_DATA = {
-            'Downy_Mildew': {
-                name: 'Downy Mildew (Kevda)',
-                health: 33,
-                badge: 'CRITICAL ALERT',
-                badgeColor: 'bg-red-500/20 text-red-300 border-red-500/30',
-                conf: '100.0%',
-                originalImg: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80',
-                gradcamImg: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80',
+        // ======== SAMPLE DATA ========
+        let currentClass = null;
+        const SAMPLES = {
+            Downy_Mildew: {
+                name: 'Downy Mildew', sci: 'Plasmopara viticola', health: 33, conf: '100%',
+                badge: 'CRITICAL', badgeCls: 'bg-red-500/20 text-red-300 border-red-500/30',
+                riskColor: 'text-red-400', riskText: 'CRITICAL',
+                img: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&q=80',
+                gcImg: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&q=80&blend=FF4500&blend-mode=multiply',
                 recs: [
-                    '• Apply systemic spray: Metalaxyl 8% + Mancozeb 64% WP @ 2.5 g/L water.',
-                    '• De-sucker lower shoots to minimize soil splash inoculation onto foliage.',
-                    '• Ensure canopy aeration by selective shoot thinning.'
+                    { icon: 'spray-can', text: 'Spray Metalaxyl 8% + Mancozeb 64% WP @ 2.5 g/L water immediately.' },
+                    { icon: 'scissors', text: 'Remove lower canopy suckers to improve air circulation.' },
+                    { icon: 'calendar', text: 'Re-apply fungicide after 7-10 days if humidity persists above 80%.' }
                 ]
             },
-            'Healthy': {
-                name: 'Healthy Leaf (Normal)',
-                health: 98,
-                badge: 'HEALTHY VINE',
-                badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-                conf: '100.0%',
-                originalImg: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400&q=80',
-                gradcamImg: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400&q=80',
+            Powdery_Mildew: {
+                name: 'Powdery Mildew', sci: 'Erysiphe necator', health: 58, conf: '98.7%',
+                badge: 'ELEVATED', badgeCls: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+                riskColor: 'text-amber-400', riskText: 'ELEVATED',
+                img: 'https://images.unsplash.com/photo-1558693168-c370615b54e0?w=600&q=80',
+                gcImg: 'https://images.unsplash.com/photo-1558693168-c370615b54e0?w=600&q=80&blend=FF8C00&blend-mode=multiply',
                 recs: [
-                    '• Grapevine condition is optimal. Continue routine preventative sprays.',
-                    '• Maintain balanced vine nutrition (Zinc, Boron, Magnesium).',
-                    '• Regular weekly canopy scouting recommended.'
+                    { icon: 'spray-can', text: 'Apply Wettable Sulfur 80% WDG @ 2.0 g/L or Azoxystrobin 23% SC @ 1.0 mL/L.' },
+                    { icon: 'wind', text: 'Prune inner canopy shoots to maximize airflow and reduce microclimate humidity.' },
+                    { icon: 'ban', text: 'Avoid overhead irrigation. Switch to drip irrigation to prevent spore spread.' }
                 ]
             },
-            'Powdery_Mildew': {
-                name: 'Powdery Mildew (Bhuri)',
-                health: 48,
-                badge: 'TREATMENT REQUIRED',
-                badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-                conf: '96.8%',
-                originalImg: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80',
-                gradcamImg: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80',
+            Bacterial_Spot: {
+                name: 'Bacterial Leaf Spot', sci: 'Xanthomonas ampelina', health: 45, conf: '97.2%',
+                badge: 'ELEVATED', badgeCls: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
+                riskColor: 'text-orange-400', riskText: 'ELEVATED',
+                img: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&q=80',
+                gcImg: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&q=80&blend=DC143C&blend-mode=multiply',
                 recs: [
-                    '• Spray Wettable Sulfur 80% WDG @ 2.0 g/L or Azoxystrobin 23% SC.',
-                    '• Avoid excessive nitrogen fertilizers that create succulent shoots.',
-                    '• Ensure proper sunlight penetration across the fruit cluster zone.'
+                    { icon: 'spray-can', text: 'Spray Copper Oxychloride 50% WP @ 2.5 g/L + Streptocycline @ 0.1 g/L.' },
+                    { icon: 'scissors', text: 'Sterilize pruning secateurs with 1% sodium hypochlorite solution.' },
+                    { icon: 'flame', text: 'Prune and burn infected shoots immediately to prevent bacterial spread.' }
                 ]
             },
-            'Bacterial_Leaf_Spot': {
-                name: 'Bacterial Canker (Karpa)',
-                health: 42,
-                badge: 'ISOLATION REQUIRED',
-                badgeColor: 'bg-red-500/20 text-red-300 border-red-500/30',
-                conf: '94.2%',
-                originalImg: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80',
-                gradcamImg: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80',
+            Healthy: {
+                name: 'Healthy Foliage', sci: 'Vitis vinifera', health: 96, conf: '100%',
+                badge: 'HEALTHY', badgeCls: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                riskColor: 'text-emerald-400', riskText: 'LOW',
+                img: 'https://images.unsplash.com/photo-1573246123716-6b1782bfc499?w=600&q=80',
+                gcImg: 'https://images.unsplash.com/photo-1573246123716-6b1782bfc499?w=600&q=80&blend=00FF00&blend-mode=multiply',
                 recs: [
-                    '• Spray Copper Oxychloride 50% WP @ 2.5 g/L + Streptocycline @ 0.1 g/L.',
-                    '• Sterilize pruning secateurs with 1% sodium hypochlorite solution.',
-                    '• Prune and burn infected shoots immediately.'
+                    { icon: 'check-circle', text: 'No disease detected. Continue regular monitoring schedule.' },
+                    { icon: 'droplets', text: 'Maintain balanced irrigation and nutrient management.' },
+                    { icon: 'calendar', text: 'Schedule next scan in 5-7 days for preventive monitoring.' }
                 ]
             }
         };
 
+        // ======== SAMPLE SELECTION ========
         function selectSample(cls) {
             currentClass = cls;
-            runDiagnosticScan();
+            document.querySelectorAll('.sample-btn').forEach(b => b.classList.remove('active', 'border-emerald-500'));
+            const btn = document.getElementById('btn_' + cls);
+            if (btn) { btn.classList.add('active'); btn.style.borderColor = '#10b981'; }
+            runScan();
         }
 
-        // ========== AUTO-WEATHER SYSTEM ==========
-        let weatherMode = 'auto';    // 'auto' or 'manual'
-        let autoWeatherData = null;  // cached weather data
-        let weatherRefreshTimer = null;
+        // ======== RUN ANALYSIS ========
+        function runScan() {
+            if (!currentClass) return;
+            const d = SAMPLES[currentClass];
+            const temp = parseFloat(document.getElementById('tempSlider').value);
+            const rh = parseFloat(document.getElementById('rhSlider').value);
+            const dew = document.getElementById('dewCheck').checked;
 
-        // Estimate lux from solar radiation (W/m2) and cloud cover
-        function estimateLux(solarRadiation, cloudCover) {
-            // ~120 lux per W/m2 for daylight, adjusted by cloud
-            if (solarRadiation <= 0) return 0;
-            const baseLux = solarRadiation * 120;
-            const cloudFactor = 1 - (cloudCover / 100) * 0.6;
-            return Math.round(baseLux * cloudFactor);
-        }
+            let health = d.health;
+            if (currentClass === 'Downy_Mildew' && rh > 80 && dew) health = Math.max(5, health - 8);
+            if (currentClass === 'Powdery_Mildew' && temp > 20 && temp < 32 && rh > 45 && rh < 70) health = Math.max(30, health - 6);
 
-        // Reverse geocode coordinates to a location name
-        async function reverseGeocode(lat, lon) {
-            try {
-                const resp = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&zoom=10&addressdetails=1`, {
-                    headers: { 'Accept-Language': 'en' }
-                });
-                const data = await resp.json();
-                const a = data.address || {};
-                const city = a.city || a.town || a.village || a.county || a.state_district || '';
-                const state = a.state || '';
-                if (city && state) return `${city}, ${state}`;
-                if (city) return city;
-                if (state) return state;
-                return `${lat.toFixed(2)}N, ${lon.toFixed(2)}E`;
-            } catch (e) {
-                return `${lat.toFixed(2)}N, ${lon.toFixed(2)}E`;
-            }
-        }
+            // KPIs
+            document.getElementById('kpiHealth').innerText = health + ' / 100';
+            document.getElementById('kpiDisease').innerText = d.name;
+            document.getElementById('kpiConf').innerText = d.conf + ' Confidence';
+            const badge = document.getElementById('kpiBadge');
+            badge.className = 'inline-block text-[10px] font-bold px-2.5 py-0.5 mt-1.5 rounded-full border ' + d.badgeCls;
+            badge.innerText = d.badge;
+            document.getElementById('kpiRisk').innerText = d.riskText;
+            document.getElementById('kpiRisk').className = 'text-lg font-extrabold mt-1 ' + d.riskColor;
+            document.getElementById('kpiRiskDetail').innerText = currentClass === 'Healthy' ? 'No pathogen detected' : 'Environmental fusion applied';
 
-        // Fetch current weather from Open-Meteo (free, no API key)
-        async function fetchWeather(lat, lon) {
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,cloud_cover,shortwave_radiation&timezone=auto`;
-            const resp = await fetch(url);
-            const data = await resp.json();
-            return data.current;
-        }
+            // Images
+            document.getElementById('imgOriginal').src = d.img;
+            document.getElementById('imgOriginal').classList.remove('hidden');
+            document.getElementById('imgPlaceholder').classList.add('hidden');
+            document.getElementById('imgGradcam').src = d.gcImg;
+            document.getElementById('imgGradcam').classList.remove('hidden');
+            document.getElementById('gcPlaceholder').classList.add('hidden');
 
-        // Apply weather data to sliders and UI
-        function applyWeatherData(weather, locationName) {
-            autoWeatherData = weather;
-            const temp = weather.temperature_2m;
-            const rh = weather.relative_humidity_2m;
-            const wind = weather.wind_speed_10m;
-            const cloud = weather.cloud_cover;
-            const solar = weather.shortwave_radiation || 0;
-            const lux = estimateLux(solar, cloud);
-
-            // Set sliders
-            document.getElementById('tempSlider').value = temp;
-            document.getElementById('rhSlider').value = rh;
-
-            // Auto-set dew: if humidity > 85% and temp < 28, likely dew
-            document.getElementById('dewCheck').checked = (rh > 85 && temp < 28);
-
-            // Update extra weather info
-            document.getElementById('weatherWind').innerText = wind.toFixed(1) + ' km/h';
-            document.getElementById('weatherCloud').innerText = cloud + '%';
-            document.getElementById('weatherLux').innerText = lux > 0 ? lux.toLocaleString() + ' lx' : 'Night';
-
-            // Update location
-            document.getElementById('weatherLocation').innerText = locationName + ' (Live)';
-            document.getElementById('weatherSourceText').innerText = 'Live Weather';
-            document.getElementById('weatherSourceBadge').className = 'text-xs bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-800 flex items-center gap-1';
+            // Advisory
+            const advHtml = d.recs.map(r => `
+                <div class="bg-slate-800/60 rounded-xl p-3 border border-slate-700/50 flex items-start gap-2.5">
+                    <i data-lucide="${r.icon}" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                    <p class="text-xs text-slate-300 leading-relaxed">${r.text}</p>
+                </div>
+            `).join('');
+            document.getElementById('advContent').innerHTML = advHtml;
+            lucide.createIcons();
 
             updateEnv();
         }
 
-        // Main auto-weather initialization
-        async function initAutoWeather() {
-            document.getElementById('weatherSourceText').innerText = 'Detecting...';
-            document.getElementById('weatherLocation').innerText = 'Detecting your location...';
+        // ======== ENVIRONMENT ========
+        function updateEnv() {
+            const temp = parseFloat(document.getElementById('tempSlider').value);
+            const rh = parseFloat(document.getElementById('rhSlider').value);
+            const dew = document.getElementById('dewCheck').checked;
+            document.getElementById('tempVal').innerText = temp.toFixed(1) + ' \u00B0C';
+            document.getElementById('rhVal').innerText = rh.toFixed(0) + ' %';
 
-            if (!navigator.geolocation) {
-                fallbackToManual('Geolocation not supported');
-                return;
-            }
+            const vpSat = 0.61078 * Math.exp((17.27 * temp) / (temp + 237.3));
+            const vpd = vpSat * (1 - rh / 100);
+            document.getElementById('kpiVpd').innerText = vpd.toFixed(2);
+            document.getElementById('envVpd').innerText = vpd.toFixed(3) + ' kPa';
 
-            navigator.geolocation.getCurrentPosition(
-                async (pos) => {
-                    try {
-                        const lat = pos.coords.latitude;
-                        const lon = pos.coords.longitude;
+            let vpdLabel = 'Ideal Transpiration';
+            if (vpd < 0.5) vpdLabel = 'Low (Wet / High Dew)';
+            else if (vpd > 1.4) vpdLabel = 'High (Dry Stress)';
+            document.getElementById('kpiVpdStatus').innerText = vpdLabel;
 
-                        // Fetch weather and location name in parallel
-                        const [weather, locName] = await Promise.all([
-                            fetchWeather(lat, lon),
-                            reverseGeocode(lat, lon)
-                        ]);
+            // Sporulation
+            const sporeRisk = vpd < 0.5 && rh > 80;
+            document.getElementById('envSpore').innerText = sporeRisk ? 'ACTIVE' : 'Inactive';
+            document.getElementById('envSpore').className = 'text-sm font-bold ' + (sporeRisk ? 'text-red-400' : 'text-emerald-400');
 
-                        applyWeatherData(weather, locName);
+            // Downy window
+            const downyActive = temp >= 18 && temp <= 26 && rh > 80 && dew;
+            document.getElementById('envDowny').innerText = downyActive ? 'OPEN' : 'Closed';
+            document.getElementById('envDowny').className = 'text-sm font-bold ' + (downyActive ? 'text-red-400' : 'text-emerald-400');
 
-                        // Auto-refresh every 10 minutes
-                        if (weatherRefreshTimer) clearInterval(weatherRefreshTimer);
-                        weatherRefreshTimer = setInterval(async () => {
-                            if (weatherMode === 'auto') {
-                                try {
-                                    const w = await fetchWeather(lat, lon);
-                                    applyWeatherData(w, locName);
-                                } catch (e) { /* silent */ }
-                            }
-                        }, 10 * 60 * 1000);
-
-                    } catch (err) {
-                        fallbackToManual('Weather API error');
-                    }
-                },
-                (err) => {
-                    // User denied location or error
-                    let reason = 'Location unavailable';
-                    if (err.code === 1) reason = 'Location denied';
-                    if (err.code === 2) reason = 'Location unavailable';
-                    if (err.code === 3) reason = 'Location timeout';
-                    fallbackToManual(reason);
-                },
-                { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 }
-            );
+            // Powdery window
+            const powderyActive = temp >= 20 && temp <= 32 && rh >= 45 && rh <= 70;
+            document.getElementById('envPowdery').innerText = powderyActive ? 'OPEN' : 'Closed';
+            document.getElementById('envPowdery').className = 'text-sm font-bold ' + (powderyActive ? 'text-amber-400' : 'text-emerald-400');
         }
 
-        function fallbackToManual(reason) {
+        function onSliderChange() {
+            if (weatherMode === 'auto') {
+                weatherMode = 'manual';
+                document.getElementById('modeBtn').innerText = 'Auto';
+                document.getElementById('envBadgeText').innerText = 'Manual';
+                document.getElementById('envBadge').className = 'text-[10px] bg-amber-950 text-amber-300 px-2 py-0.5 rounded-md border border-amber-800 font-bold flex items-center gap-1';
+            }
+            updateEnv();
+        }
+
+        // ======== AUTO WEATHER ========
+        let weatherMode = 'auto';
+        let weatherTimer = null;
+
+        function estimateLux(solar, cloud) {
+            if (solar <= 0) return 0;
+            return Math.round(solar * 120 * (1 - cloud / 100 * 0.6));
+        }
+
+        async function reverseGeo(lat, lon) {
+            try {
+                const r = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&zoom=10&addressdetails=1`, { headers: { 'Accept-Language': 'en' } });
+                const d = await r.json(); const a = d.address || {};
+                const c = a.city || a.town || a.village || a.county || a.state_district || '';
+                const s = a.state || '';
+                return c && s ? `${c}, ${s}` : c || s || `${lat.toFixed(2)}N, ${lon.toFixed(2)}E`;
+            } catch { return `${lat.toFixed(2)}N, ${lon.toFixed(2)}E`; }
+        }
+
+        async function fetchWeather(lat, lon) {
+            const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,cloud_cover,shortwave_radiation&timezone=auto`);
+            return (await r.json()).current;
+        }
+
+        function applyWeather(w, loc) {
+            document.getElementById('tempSlider').value = w.temperature_2m;
+            document.getElementById('rhSlider').value = w.relative_humidity_2m;
+            document.getElementById('dewCheck').checked = (w.relative_humidity_2m > 85 && w.temperature_2m < 28);
+            document.getElementById('wWind').innerText = w.wind_speed_10m.toFixed(1) + ' km/h';
+            document.getElementById('wCloud').innerText = w.cloud_cover + '%';
+            const lux = estimateLux(w.shortwave_radiation || 0, w.cloud_cover);
+            document.getElementById('wLux').innerText = lux > 0 ? lux.toLocaleString() + ' lx' : 'Night';
+            document.getElementById('locText').innerText = loc + ' (Live)';
+            document.getElementById('envBadgeText').innerText = 'Live';
+            document.getElementById('navWeatherText').innerText = w.temperature_2m.toFixed(1) + '\u00B0C \u00B7 ' + w.relative_humidity_2m + '% RH \u00B7 ' + loc;
+            document.getElementById('envBadge').className = 'text-[10px] bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded-md border border-emerald-800 font-bold flex items-center gap-1';
+            updateEnv();
+        }
+
+        async function initWeather() {
+            if (!navigator.geolocation) { fallbackManual('Not supported'); return; }
+            navigator.geolocation.getCurrentPosition(async pos => {
+                try {
+                    const [w, loc] = await Promise.all([fetchWeather(pos.coords.latitude, pos.coords.longitude), reverseGeo(pos.coords.latitude, pos.coords.longitude)]);
+                    applyWeather(w, loc);
+                    if (weatherTimer) clearInterval(weatherTimer);
+                    weatherTimer = setInterval(async () => { if (weatherMode === 'auto') { try { applyWeather(await fetchWeather(pos.coords.latitude, pos.coords.longitude), loc); } catch {} } }, 600000);
+                } catch { fallbackManual('API error'); }
+            }, err => { fallbackManual(err.code === 1 ? 'Location denied' : 'Unavailable'); },
+            { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 });
+        }
+
+        function fallbackManual(reason) {
             weatherMode = 'manual';
-            document.getElementById('weatherSourceText').innerText = 'Manual';
-            document.getElementById('weatherSourceBadge').className = 'text-xs bg-amber-950 text-amber-300 px-2 py-0.5 rounded border border-amber-800 flex items-center gap-1';
-            document.getElementById('weatherLocation').innerText = reason + ' — using manual input';
-            document.getElementById('weatherToggleBtn').innerText = 'Auto';
-            document.getElementById('weatherDetailsRow').style.display = 'none';
+            document.getElementById('envBadgeText').innerText = 'Manual';
+            document.getElementById('envBadge').className = 'text-[10px] bg-amber-950 text-amber-300 px-2 py-0.5 rounded-md border border-amber-800 font-bold flex items-center gap-1';
+            document.getElementById('locText').innerText = reason + ' \u2014 manual input';
+            document.getElementById('modeBtn').innerText = 'Auto';
+            document.getElementById('extraRow').style.display = 'none';
+            document.getElementById('navWeatherText').innerText = 'Manual mode';
             updateEnv();
         }
 
         function toggleWeatherMode() {
             if (weatherMode === 'auto') {
-                // Switch to manual
                 weatherMode = 'manual';
-                document.getElementById('weatherToggleBtn').innerText = 'Auto';
-                document.getElementById('weatherSourceText').innerText = 'Manual';
-                document.getElementById('weatherSourceBadge').className = 'text-xs bg-amber-950 text-amber-300 px-2 py-0.5 rounded border border-amber-800 flex items-center gap-1';
-                document.getElementById('weatherDetailsRow').style.display = 'none';
+                document.getElementById('modeBtn').innerText = 'Auto';
+                document.getElementById('envBadgeText').innerText = 'Manual';
+                document.getElementById('envBadge').className = 'text-[10px] bg-amber-950 text-amber-300 px-2 py-0.5 rounded-md border border-amber-800 font-bold flex items-center gap-1';
+                document.getElementById('extraRow').style.display = 'none';
             } else {
-                // Switch back to auto
                 weatherMode = 'auto';
-                document.getElementById('weatherToggleBtn').innerText = 'Manual';
-                document.getElementById('weatherSourceText').innerText = 'Reconnecting...';
-                document.getElementById('weatherDetailsRow').style.display = 'grid';
-                initAutoWeather();
+                document.getElementById('modeBtn').innerText = 'Manual';
+                document.getElementById('extraRow').style.display = 'grid';
+                initWeather();
             }
         }
 
-        // When user manually moves a slider, switch to manual mode
-        function onManualSliderChange() {
-            if (weatherMode === 'auto') {
-                weatherMode = 'manual';
-                document.getElementById('weatherToggleBtn').innerText = 'Auto';
-                document.getElementById('weatherSourceText').innerText = 'Manual Override';
-                document.getElementById('weatherSourceBadge').className = 'text-xs bg-amber-950 text-amber-300 px-2 py-0.5 rounded border border-amber-800 flex items-center gap-1';
-            }
-            updateEnv();
+        function handleFileUpload(e) {
+            const f = e.target.files[0]; if (!f) return;
+            const r = new FileReader();
+            r.onload = ev => {
+                document.getElementById('imgOriginal').src = ev.target.result;
+                document.getElementById('imgOriginal').classList.remove('hidden');
+                document.getElementById('imgPlaceholder').classList.add('hidden');
+                document.getElementById('imgGradcam').src = ev.target.result;
+                document.getElementById('imgGradcam').classList.remove('hidden');
+                document.getElementById('gcPlaceholder').classList.add('hidden');
+                document.getElementById('kpiDisease').innerText = 'Custom Leaf';
+                document.getElementById('kpiConf').innerText = '97.8% Confidence';
+                document.getElementById('kpiHealth').innerText = '74 / 100';
+            };
+            r.readAsDataURL(f);
         }
 
-        // ========== EXISTING LOGIC ==========
-
-        function updateEnv() {
-            const temp = parseFloat(document.getElementById('tempSlider').value);
-            const rh = parseFloat(document.getElementById('rhSlider').value);
-            document.getElementById('tempValue').innerText = temp.toFixed(1) + ' °C';
-            document.getElementById('rhValue').innerText = rh.toFixed(0) + ' %';
-            
-            // VPD calculation: VPsat * (1 - RH/100)
-            const vpSat = 0.61078 * Math.exp((17.27 * temp) / (temp + 237.3));
-            const vpd = (vpSat * (1.0 - (rh / 100.0))).toFixed(2);
-            document.getElementById('outVpd').innerText = vpd;
-            
-            if (vpd < 0.5) {
-                document.getElementById('outVpdStatus').innerText = 'Low (High Dew)';
-            } else if (vpd <= 1.4) {
-                document.getElementById('outVpdStatus').innerText = 'Ideal Transpiration';
-            } else {
-                document.getElementById('outVpdStatus').innerText = 'High (Dry/Stress)';
-            }
+        function toggleLang() {
+            const l = document.getElementById('langLabel');
+            l.innerText = l.innerText === 'EN' ? 'MR' : 'EN';
         }
 
-        function runDiagnosticScan() {
-            const data = SAMPLE_DATA[currentClass];
-            const temp = parseFloat(document.getElementById('tempSlider').value);
-            const rh = parseFloat(document.getElementById('rhSlider').value);
-            const dew = document.getElementById('dewCheck').checked;
-
-            let health = data.health;
-            if (currentClass === 'Downy_Mildew' && rh > 80 && dew) {
-                health = Math.max(5, health - 8);
-            }
-
-            document.getElementById('outHealthScore').innerText = health + ' / 100';
-            document.getElementById('outDisease').innerText = data.name;
-            document.getElementById('outConfidence').innerText = data.conf + ' Confidence';
-
-            const badge = document.getElementById('outHealthBadge');
-            badge.className = 'inline-block text-[10px] font-bold px-2 py-0.5 mt-1 rounded-full border ' + data.badgeColor;
-            badge.innerText = data.badge;
-
-            document.getElementById('previewOriginal').src = data.originalImg;
-            document.getElementById('previewGradcam').src = data.gradcamImg;
-
-            document.getElementById('advisoryText1').innerText = data.recs[0];
-            document.getElementById('advisoryText2').innerText = data.recs[1];
-            document.getElementById('advisoryText3').innerText = data.recs[2];
-        }
-
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('previewOriginal').src = e.target.result;
-                    document.getElementById('previewGradcam').src = e.target.result;
-                    document.getElementById('outDisease').innerText = 'Custom Leaf Analyzed';
-                    document.getElementById('outConfidence').innerText = '97.8% Confidence';
-                    document.getElementById('outHealthScore').innerText = '74 / 100';
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // Initialize: auto-fetch weather, then run scan
+        // INIT
         updateEnv();
-        runDiagnosticScan();
-        initAutoWeather();
+        initWeather();
+        lucide.createIcons();
     </script>
 </body>
 </html>
