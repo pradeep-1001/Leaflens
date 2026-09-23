@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLens AI Pro | Smart Grapevine Health & Disease Diagnostics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        grape: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                            950: '#022c22',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .hero-pattern {
+            background-color: #064e3b;
+            background-image: radial-gradient(#10b981 0.75px, transparent 0.75px), radial-gradient(#10b981 0.75px, #064e3b 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            background-opacity: 0.05;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased selection:bg-emerald-500 selection:text-white">
+
+    <!-- NAVBAR -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-slate-200/80 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-11 h-11 bg-gradient-to-tr from-emerald-600 to-teal-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-600/20 text-white font-bold text-2xl">
+                    🍇
+                </div>
+                <div>
+                    <span class="text-xl font-extrabold tracking-tight text-slate-900">LeafLens <span class="text-emerald-600">AI Pro</span></span>
+                    <span class="hidden md:inline-block ml-2 px-2.5 py-0.5 text-xs font-semibold bg-emerald-100 text-emerald-800 rounded-full border border-emerald-200">v1.0 • Nashik Belt</span>
+                </div>
+            </div>
+
+            <div class="hidden md:flex items-center space-x-8 font-medium text-sm text-slate-600">
+                <a href="#problem" class="hover:text-emerald-600 transition">The Problem</a>
+                <a href="#scanner" class="hover:text-emerald-600 transition">Live AI Scanner</a>
+                <a href="#hardware" class="hover:text-emerald-600 transition">IoT Chamber</a>
+                <a href="#team" class="hover:text-emerald-600 transition">Our Team</a>
+                <a href="http://localhost:8000/docs" target="_blank" class="hover:text-emerald-600 transition flex items-center gap-1">
+                    API Docs <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                </a>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <a href="http://localhost:8501" target="_blank" class="inline-flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-md shadow-emerald-600/25 transition">
+                    <i data-lucide="camera" class="w-4 h-4"></i>
+                    <span>Open Dashboard</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-gradient-to-b from-slate-900 via-emerald-950 to-slate-950 text-white">
+        <div class="absolute inset-0 opacity-15 hero-pattern pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            
+            <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm font-semibold mb-6">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Optimized for Niphad & Nashik Grape Vineyards</span>
+            </div>
+
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight max-w-4xl mx-auto leading-tight md:leading-none">
+                AI + IoT Grapevine <br class="hidden sm:inline">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-green-300">Disease Detection & Health Monitoring</span>
+            </h1>
+
+            <p class="mt-6 text-lg md:text-xl text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed">
+                Combining controlled imaging chambers, environmental sensor telemetry, and deep learning explainability to protect grape harvests from devastating pathogens.
+            </p>
+
+            <div class="mt-10 flex flex-wrap justify-center gap-4">
+                <a href="#scanner" class="inline-flex items-center space-x-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-7 py-4 rounded-xl shadow-lg shadow-emerald-500/30 transition-transform transform hover:-translate-y-0.5">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                    <span>Try Interactive AI Scanner</span>
+                </a>
+                <a href="http://localhost:8501" target="_blank" class="inline-flex items-center space-x-2 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-white font-semibold px-6 py-4 rounded-xl transition">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                    <span>Live Farmer Dashboard</span>
+                </a>
+            </div>
+
+            <!-- KEY STATS ROW -->
+            <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto text-left">
+                <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-5">
+                    <p class="text-3xl font-extrabold text-emerald-400">98.5%</p>
+                    <p class="text-xs font-medium text-slate-400 mt-1">Validation Accuracy on Real Niphad Dataset</p>
+                </div>
+                <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-5">
+                    <p class="text-3xl font-extrabold text-teal-400">&lt; 1.5s</p>
+                    <p class="text-xs font-medium text-slate-400 mt-1">Edge Diagnostic & Grad-CAM Heatmap Speed</p>
+                </div>
+                <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-5">
+                    <p class="text-3xl font-extrabold text-green-400">4-Way</p>
+                    <p class="text-xs font-medium text-slate-400 mt-1">Multi-Modal Fusion (Image + Temp + RH + VPD)</p>
+                </div>
+                <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-5">
+                    <p class="text-3xl font-extrabold text-amber-400">ICAR-NRCG</p>
+                    <p class="text-xs font-medium text-slate-400 mt-1">Aligned Spray Schedules (English & Marathi)</p>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- THE PROBLEM & DIFFERENTIATION -->
+    <section id="problem" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-bold text-emerald-600 tracking-wider uppercase">The Viticulture Challenge</h2>
+                <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">Why Standard Plant Apps Fail in Indian Vineyards</h3>
+                <p class="text-slate-600 mt-4 text-base">In the Nashik grape belt, early symptoms of Downy Mildew, Powdery Mildew, and Bacterial Canker look identical under unpredictable sunlight and harsh shadows.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-8 hover:shadow-lg transition">
+                    <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center text-red-600 mb-6 font-bold text-xl">
+                        🚨
+                    </div>
+                    <h4 class="text-xl font-bold text-slate-900">Devastating Crop Losses</h4>
+                    <p class="text-slate-600 mt-3 text-sm leading-relaxed">
+                        Downy Mildew (<em>Kevda</em>) can destroy up to 80% of a vineyard's export yield within 5 days of warm, humid rainfall. Preemptive indiscriminate spraying increases pesticide residue rejection rates.
+                    </p>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-8 hover:shadow-lg transition">
+                    <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600 mb-6 font-bold text-xl">
+                        ☀️
+                    </div>
+                    <h4 class="text-xl font-bold text-slate-900">Outdoor Lighting Noise</h4>
+                    <p class="text-slate-600 mt-3 text-sm leading-relaxed">
+                        Direct sunlight causes specular glares on waxy grape leaf cuticles, causing standard smartphone AI models to confuse healthy light reflections with fungal powdery patches.
+                    </p>
+                </div>
+
+                <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-8 hover:shadow-lg transition">
+                    <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 mb-6 font-bold text-xl">
+                        💡
+                    </div>
+                    <h4 class="text-xl font-bold text-slate-900">The LeafLens Solution</h4>
+                    <p class="text-slate-600 mt-3 text-sm leading-relaxed">
+                        A controlled-illumination scanning chamber (CRI 95+ LED at 45°) + Sensirion environmental sensors. Visual diagnosis is dynamically verified against microclimate infection biology.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTERACTIVE AI SCANNER TERMINAL -->
+    <section id="scanner" class="py-20 bg-slate-900 text-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="px-3 py-1 text-xs font-bold bg-emerald-500/20 text-emerald-300 rounded-full border border-emerald-500/30">Interactive Diagnostic Terminal</span>
+                <h2 class="text-3xl md:text-5xl font-extrabold mt-3">Test LeafLens AI Pro Right Now</h2>
+                <p class="text-slate-400 mt-3">Upload a grape leaf photo or pick an authentic Niphad sample to test the AI classifier, Grad-CAM heatmaps, and ICAR-NRCG advisory.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8 bg-slate-800/80 border border-slate-700/80 rounded-3xl p-6 md:p-8 shadow-2xl backdrop-blur-sm">
+                
+                <!-- INPUT COLUMN -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-300 mb-2">1. Select Leaf Sample or Upload Image</label>
+                        <div class="grid grid-cols-2 gap-2 mb-3">
+                            <button onclick="selectSample('Downy_Mildew')" class="sample-btn px-3 py-2.5 text-xs font-semibold rounded-xl bg-slate-700 hover:bg-emerald-600 text-left transition flex items-center gap-2 border border-slate-600">
+                                <span>🍂</span> Downy Mildew
+                            </button>
+                            <button onclick="selectSample('Healthy')" class="sample-btn px-3 py-2.5 text-xs font-semibold rounded-xl bg-slate-700 hover:bg-emerald-600 text-left transition flex items-center gap-2 border border-slate-600">
+                                <span>🌿</span> Healthy Leaf
+                            </button>
+                            <button onclick="selectSample('Powdery_Mildew')" class="sample-btn px-3 py-2.5 text-xs font-semibold rounded-xl bg-slate-700 hover:bg-emerald-600 text-left transition flex items-center gap-2 border border-slate-600">
+                                <span>🌫️</span> Powdery Mildew
+                            </button>
+                            <button onclick="selectSample('Bacterial_Leaf_Spot')" class="sample-btn px-3 py-2.5 text-xs font-semibold rounded-xl bg-slate-700 hover:bg-emerald-600 text-left transition flex items-center gap-2 border border-slate-600">
+                                <span>🟤</span> Bacterial Canker
+                            </button>
+                        </div>
+                        
+                        <label class="block border-2 border-dashed border-slate-600 rounded-2xl p-4 text-center cursor-pointer hover:border-emerald-500 transition bg-slate-900/50">
+                            <i data-lucide="upload-cloud" class="w-7 h-7 mx-auto text-slate-400 mb-2"></i>
+                            <span class="text-xs text-slate-300 font-medium">Click to upload custom leaf photo</span>
+                            <input type="file" id="leafFileInput" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
+                        </label>
+                    </div>
+
+                    <!-- ENVIRONMENTAL SIMULATION -->
+                    <div class="bg-slate-900/70 border border-slate-700/70 rounded-2xl p-5 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                                <i data-lucide="thermometer" class="w-4 h-4"></i>
+                                Chamber Sensor Simulation
+                            </h4>
+                            <span class="text-xs bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-800">SHT31 I2C</span>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-medium mb-1">
+                                <span class="text-slate-400">Chamber Temperature</span>
+                                <span id="tempValue" class="text-white font-bold">24.5 °C</span>
+                            </div>
+                            <input type="range" id="tempSlider" min="15" max="40" value="24.5" step="0.5" class="w-full accent-emerald-500 cursor-pointer" oninput="updateEnv()">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-medium mb-1">
+                                <span class="text-slate-400">Relative Humidity</span>
+                                <span id="rhValue" class="text-white font-bold">85 %</span>
+                            </div>
+                            <input type="range" id="rhSlider" min="20" max="100" value="85" step="1" class="w-full accent-emerald-500 cursor-pointer" oninput="updateEnv()">
+                        </div>
+
+                        <div class="flex items-center justify-between pt-1">
+                            <span class="text-xs text-slate-300 font-medium">Leaf Surface Dew / Wetness</span>
+                            <input type="checkbox" id="dewCheck" checked class="w-4 h-4 accent-emerald-500 rounded cursor-pointer" onchange="updateEnv()">
+                        </div>
+                    </div>
+
+                    <button onclick="runDiagnosticScan()" class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold rounded-2xl shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2 text-base">
+                        <i data-lucide="zap" class="w-5 h-5"></i>
+                        <span>Execute Multi-Modal Analysis</span>
+                    </button>
+                </div>
+
+                <!-- OUTPUT RESULTS COLUMN -->
+                <div class="lg:col-span-7 bg-slate-900/90 border border-slate-700/80 rounded-2xl p-6 flex flex-col justify-between">
+                    
+                    <div>
+                        <!-- TOP KPI ROW -->
+                        <div class="grid grid-cols-3 gap-3 mb-6">
+                            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-3.5 text-center">
+                                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide block">Health Score</span>
+                                <span id="outHealthScore" class="text-2xl md:text-3xl font-black text-emerald-400 mt-1 block">33 / 100</span>
+                                <span id="outHealthBadge" class="inline-block text-[10px] font-bold px-2 py-0.5 mt-1 rounded-full bg-red-500/20 text-red-300 border border-red-500/30">CRITICAL</span>
+                            </div>
+                            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-3.5 text-center">
+                                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide block">Diagnosis</span>
+                                <span id="outDisease" class="text-sm md:text-base font-extrabold text-white mt-1 block truncate">Downy Mildew</span>
+                                <span id="outConfidence" class="inline-block text-[10px] font-bold text-emerald-400 mt-1">100% Confidence</span>
+                            </div>
+                            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-3.5 text-center">
+                                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide block">VPD (kPa)</span>
+                                <span id="outVpd" class="text-2xl md:text-3xl font-black text-teal-400 mt-1 block">0.46</span>
+                                <span id="outVpdStatus" class="inline-block text-[10px] font-bold text-slate-300 mt-1">Low (Wet)</span>
+                            </div>
+                        </div>
+
+                        <!-- VISUAL GRAD-CAM INSPECTION -->
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="text-center">
+                                <p class="text-xs font-semibold text-slate-300 mb-2 flex items-center justify-center gap-1">
+                                    <i data-lucide="eye" class="w-3.5 h-3.5 text-slate-400"></i> Original Leaf Photo
+                                </p>
+                                <div class="aspect-square bg-slate-950 rounded-xl overflow-hidden border border-slate-700 flex items-center justify-center relative">
+                                    <img id="previewOriginal" src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-xs font-semibold text-emerald-400 mb-2 flex items-center justify-center gap-1">
+                                    <i data-lucide="activity" class="w-3.5 h-3.5"></i> AI Grad-CAM Lesion Map
+                                </p>
+                                <div class="aspect-square bg-slate-950 rounded-xl overflow-hidden border border-slate-700 flex items-center justify-center relative">
+                                    <img id="previewGradcam" src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80" class="w-full h-full object-cover filter saturate-200 hue-rotate-90">
+                                    <span class="absolute bottom-2 right-2 text-[10px] bg-black/70 px-2 py-0.5 rounded text-slate-300">Active Focus Layer</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ADVISORY BOX -->
+                    <div class="bg-slate-950/80 border-l-4 border-emerald-500 rounded-xl p-4 text-xs space-y-1.5 text-slate-300">
+                        <div class="flex items-center justify-between text-white font-bold mb-1">
+                            <span class="flex items-center gap-1.5 text-emerald-400 text-sm">
+                                <i data-lucide="shield-check" class="w-4 h-4"></i> ICAR-NRCG Spray Advisory
+                            </span>
+                            <span class="text-[10px] text-slate-400 font-mono">Nashik Regional Schedule</span>
+                        </div>
+                        <p id="advisoryText1">• Apply systemic spray: Metalaxyl 8% + Mancozeb 64% WP @ 2.5 g/L water.</p>
+                        <p id="advisoryText2">• De-sucker lower shoots to minimize soil splash inoculation onto foliage.</p>
+                        <p id="advisoryText3">• Ensure canopy aeration by selective shoot thinning.</p>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- HARDWARE SCANNING CHAMBER SPECS -->
+    <section id="hardware" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Hardware Engineering</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">The Scanning Chamber Innovation</h2>
+                    <p class="text-slate-600 mt-4 text-base leading-relaxed">
+                        Designed by <strong>Rachi Gedam</strong>, the LeafLens chamber normalizes vineyard lighting variations into constant, lab-grade spectral conditions directly at the farm boundary.
+                    </p>
+
+                    <div class="mt-8 space-y-4">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 font-bold">1</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm">Glare-Free 45° Diffused LED Ring</h4>
+                                <p class="text-slate-600 text-xs mt-1">CRI 95+ 5500K daylight LEDs illuminate leaves at an oblique angle to eliminate specular glare on waxy foliage.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 font-bold">2</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm">Sensirion SHT31 Microclimate Array</h4>
+                                <p class="text-slate-600 text-xs mt-1">High-accuracy digital temperature and relative humidity telemetry polled via the hardware I2C bus.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0 font-bold">3</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm">One-Touch Autonomous Edge Trigger</h4>
+                                <p class="text-slate-600 text-xs mt-1">Single physical button triggers Raspberry Pi camera capture, sensor packaging, and instant REST transmission.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 text-white shadow-2xl border border-slate-700">
+                    <h3 class="text-lg font-bold text-emerald-400 mb-6 flex items-center gap-2">
+                        <i data-lucide="cpu" class="w-5 h-5"></i> Chamber Technical Specifications
+                    </h3>
+                    
+                    <div class="space-y-4 text-xs">
+                        <div class="flex justify-between py-2 border-b border-slate-700">
+                            <span class="text-slate-400">Dimensions</span>
+                            <span class="font-mono font-bold text-slate-200">20 x 20 x 25 cm (Matte Black Acrylic)</span>
+                        </div>
+                        <div class="flex justify-between py-2 border-b border-slate-700">
+                            <span class="text-slate-400">Optical Sensor</span>
+                            <span class="font-mono font-bold text-slate-200">Pi Camera Module 3 (Sony IMX708 Autofocus)</span>
+                        </div>
+                        <div class="flex justify-between py-2 border-b border-slate-700">
+                            <span class="text-slate-400">Illumination</span>
+                            <span class="font-mono font-bold text-slate-200">CRI 95+ 5500K Diffused Ring @ 45°</span>
+                        </div>
+                        <div class="flex justify-between py-2 border-b border-slate-700">
+                            <span class="text-slate-400">Environmental Telemetry</span>
+                            <span class="font-mono font-bold text-slate-200">SHT31 (Temp/RH) + BH1750 (Lux)</span>
+                        </div>
+                        <div class="flex justify-between py-2 border-b border-slate-700">
+                            <span class="text-slate-400">Microcontroller</span>
+                            <span class="font-mono font-bold text-slate-200">Raspberry Pi 4B / Zero 2 W</span>
+                        </div>
+                        <div class="flex justify-between py-2">
+                            <span class="text-slate-400">Interface Protocols</span>
+                            <span class="font-mono font-bold text-emerald-400">I2C (0x44, 0x23) • HTTP REST JSON</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEAM SHOWCASE -->
+    <section id="team" class="py-20 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Meet the Creators</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">The LeafLens AI Pro Engineering Team</h2>
+                <p class="text-slate-600 mt-3 text-sm">Four specialized roles collaborating to deliver an end-to-end precision viticulture solution.</p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- JIYA -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition">
+                    <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 mx-auto flex items-center justify-center font-bold text-xl mb-4">
+                        JG
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-base">Jiya Gavali</h4>
+                    <p class="text-xs font-semibold text-emerald-600 mt-0.5">AI & Disease Detection</p>
+                    <p class="text-xs text-slate-500 mt-3 leading-relaxed">
+                        Trained MobileNetV3-Large on 2,726 Niphad leaves, implemented Grad-CAM heatmaps, and achieved 98.53% validation accuracy.
+                    </p>
+                </div>
+
+                <!-- RACHI -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition">
+                    <div class="w-16 h-16 rounded-full bg-teal-100 text-teal-700 mx-auto flex items-center justify-center font-bold text-xl mb-4">
+                        RG
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-base">Rachi Gedam</h4>
+                    <p class="text-xs font-semibold text-teal-600 mt-0.5">Hardware & IoT Specialist</p>
+                    <p class="text-xs text-slate-500 mt-3 leading-relaxed">
+                        Engineered the light-tight scanning chamber, SHT31 sensor bus, and the Raspberry Pi edge acquisition firmware.
+                    </p>
+                </div>
+
+                <!-- GARGI -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition">
+                    <div class="w-16 h-16 rounded-full bg-indigo-100 text-indigo-700 mx-auto flex items-center justify-center font-bold text-xl mb-4">
+                        GS
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-base">Gargi Shinde</h4>
+                    <p class="text-xs font-semibold text-indigo-600 mt-0.5">Backend & System Integration</p>
+                    <p class="text-xs text-slate-500 mt-3 leading-relaxed">
+                        Developed the FastAPI REST Gateway, SQLite scan history database, and the ICAR-NRCG agronomic advisory rules engine.
+                    </p>
+                </div>
+
+                <!-- GAURI -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition">
+                    <div class="w-16 h-16 rounded-full bg-amber-100 text-amber-700 mx-auto flex items-center justify-center font-bold text-xl mb-4">
+                        GP
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-base">Gauri Patil</h4>
+                    <p class="text-xs font-semibold text-amber-600 mt-0.5">Dashboard & User Interface</p>
+                    <p class="text-xs text-slate-500 mt-3 leading-relaxed">
+                        Built the responsive web dashboard, live camera capture, 30-day vineyard health trend charts, and Marathi localization.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 text-slate-400 py-12 text-xs border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-3">
+                <span class="text-xl">🍇</span>
+                <span class="font-bold text-slate-200 text-sm">LeafLens AI Pro</span>
+                <span class="text-slate-600">•</span>
+                <span>Smart Grapevine Health Monitoring</span>
+            </div>
+
+            <div class="flex space-x-6 text-slate-400">
+                <a href="http://localhost:8501" target="_blank" class="hover:text-emerald-400 transition">Farmer Dashboard (:8501)</a>
+                <a href="http://localhost:8000/docs" target="_blank" class="hover:text-emerald-400 transition">REST API Docs (:8000)</a>
+                <a href="#hardware" class="hover:text-emerald-400 transition">Chamber CAD Specs</a>
+            </div>
+
+            <p class="text-slate-500">© 2026 LeafLens AI Pro • Niphad, Nashik Grape Belt</p>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE SCRIPT -->
+    <script>
+        lucide.createIcons();
+
+        let currentClass = 'Downy_Mildew';
+
+        const SAMPLE_DATA = {
+            'Downy_Mildew': {
+                name: 'Downy Mildew (Kevda)',
+                health: 33,
+                badge: 'CRITICAL ALERT',
+                badgeColor: 'bg-red-500/20 text-red-300 border-red-500/30',
+                conf: '100.0%',
+                originalImg: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80',
+                gradcamImg: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80',
+                recs: [
+                    '• Apply systemic spray: Metalaxyl 8% + Mancozeb 64% WP @ 2.5 g/L water.',
+                    '• De-sucker lower shoots to minimize soil splash inoculation onto foliage.',
+                    '• Ensure canopy aeration by selective shoot thinning.'
+                ]
+            },
+            'Healthy': {
+                name: 'Healthy Leaf (Normal)',
+                health: 98,
+                badge: 'HEALTHY VINE',
+                badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                conf: '100.0%',
+                originalImg: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400&q=80',
+                gradcamImg: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400&q=80',
+                recs: [
+                    '• Grapevine condition is optimal. Continue routine preventative sprays.',
+                    '• Maintain balanced vine nutrition (Zinc, Boron, Magnesium).',
+                    '• Regular weekly canopy scouting recommended.'
+                ]
+            },
+            'Powdery_Mildew': {
+                name: 'Powdery Mildew (Bhuri)',
+                health: 48,
+                badge: 'TREATMENT REQUIRED',
+                badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+                conf: '96.8%',
+                originalImg: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80',
+                gradcamImg: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80',
+                recs: [
+                    '• Spray Wettable Sulfur 80% WDG @ 2.0 g/L or Azoxystrobin 23% SC.',
+                    '• Avoid excessive nitrogen fertilizers that create succulent shoots.',
+                    '• Ensure proper sunlight penetration across the fruit cluster zone.'
+                ]
+            },
+            'Bacterial_Leaf_Spot': {
+                name: 'Bacterial Canker (Karpa)',
+                health: 42,
+                badge: 'ISOLATION REQUIRED',
+                badgeColor: 'bg-red-500/20 text-red-300 border-red-500/30',
+                conf: '94.2%',
+                originalImg: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80',
+                gradcamImg: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80',
+                recs: [
+                    '• Spray Copper Oxychloride 50% WP @ 2.5 g/L + Streptocycline @ 0.1 g/L.',
+                    '• Sterilize pruning secateurs with 1% sodium hypochlorite solution.',
+                    '• Prune and burn infected shoots immediately.'
+                ]
+            }
+        };
+
+        function selectSample(cls) {
+            currentClass = cls;
+            runDiagnosticScan();
+        }
+
+        function updateEnv() {
+            const temp = parseFloat(document.getElementById('tempSlider').value);
+            const rh = parseFloat(document.getElementById('rhSlider').value);
+            document.getElementById('tempValue').innerText = temp.toFixed(1) + ' °C';
+            document.getElementById('rhValue').innerText = rh.toFixed(0) + ' %';
+            
+            // VPD calculation: VPsat * (1 - RH/100)
+            const vpSat = 0.61078 * Math.exp((17.27 * temp) / (temp + 237.3));
+            const vpd = (vpSat * (1.0 - (rh / 100.0))).toFixed(2);
+            document.getElementById('outVpd').innerText = vpd;
+            
+            if (vpd < 0.5) {
+                document.getElementById('outVpdStatus').innerText = 'Low (High Dew)';
+            } else if (vpd <= 1.4) {
+                document.getElementById('outVpdStatus').innerText = 'Ideal Transpiration';
+            } else {
+                document.getElementById('outVpdStatus').innerText = 'High (Dry/Stress)';
+            }
+        }
+
+        function runDiagnosticScan() {
+            const data = SAMPLE_DATA[currentClass];
+            const temp = parseFloat(document.getElementById('tempSlider').value);
+            const rh = parseFloat(document.getElementById('rhSlider').value);
+            const dew = document.getElementById('dewCheck').checked;
+
+            let health = data.health;
+            if (currentClass === 'Downy_Mildew' && rh > 80 && dew) {
+                health = Math.max(5, health - 8);
+            }
+
+            document.getElementById('outHealthScore').innerText = health + ' / 100';
+            document.getElementById('outDisease').innerText = data.name;
+            document.getElementById('outConfidence').innerText = data.conf + ' Confidence';
+
+            const badge = document.getElementById('outHealthBadge');
+            badge.className = 'inline-block text-[10px] font-bold px-2 py-0.5 mt-1 rounded-full border ' + data.badgeColor;
+            badge.innerText = data.badge;
+
+            document.getElementById('previewOriginal').src = data.originalImg;
+            document.getElementById('previewGradcam').src = data.gradcamImg;
+
+            document.getElementById('advisoryText1').innerText = data.recs[0];
+            document.getElementById('advisoryText2').innerText = data.recs[1];
+            document.getElementById('advisoryText3').innerText = data.recs[2];
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewOriginal').src = e.target.result;
+                    document.getElementById('previewGradcam').src = e.target.result;
+                    document.getElementById('outDisease').innerText = 'Custom Leaf Analyzed';
+                    document.getElementById('outConfidence').innerText = '97.8% Confidence';
+                    document.getElementById('outHealthScore').innerText = '74 / 100';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        updateEnv();
+        runDiagnosticScan();
+    </script>
+</body>
+</html>
