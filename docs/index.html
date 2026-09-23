@@ -214,32 +214,68 @@
                         </label>
                     </div>
 
-                    <!-- ENVIRONMENTAL SIMULATION -->
+                    <!-- ENVIRONMENTAL SENSORS — AUTO WEATHER + MANUAL -->
                     <div class="bg-slate-900/70 border border-slate-700/70 rounded-2xl p-5 space-y-4">
+                        <!-- Header with Auto/Manual Toggle -->
                         <div class="flex items-center justify-between">
                             <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
                                 <i data-lucide="thermometer" class="w-4 h-4"></i>
-                                Chamber Sensor Simulation
+                                Environmental Sensors
                             </h4>
-                            <span class="text-xs bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-800">SHT31 I2C</span>
+                            <div class="flex items-center gap-2">
+                                <span id="weatherSourceBadge" class="text-xs bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-800 flex items-center gap-1">
+                                    <i data-lucide="wifi" class="w-3 h-3"></i>
+                                    <span id="weatherSourceText">Detecting...</span>
+                                </span>
+                            </div>
                         </div>
 
+                        <!-- Auto Weather Status Banner -->
+                        <div id="weatherAutoBar" class="bg-emerald-950/60 border border-emerald-800/50 rounded-xl px-3 py-2.5 flex items-center justify-between">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-400 flex-shrink-0"></i>
+                                <span id="weatherLocation" class="text-xs text-emerald-200 truncate">Detecting your location...</span>
+                            </div>
+                            <button onclick="toggleWeatherMode()" id="weatherToggleBtn" class="flex-shrink-0 ml-2 text-[10px] font-bold uppercase tracking-wide bg-slate-700 hover:bg-slate-600 text-slate-200 px-2.5 py-1 rounded-md transition">
+                                Manual
+                            </button>
+                        </div>
+
+                        <!-- Temperature -->
                         <div>
                             <div class="flex justify-between text-xs font-medium mb-1">
-                                <span class="text-slate-400">Chamber Temperature</span>
+                                <span class="text-slate-400">Temperature</span>
                                 <span id="tempValue" class="text-white font-bold">24.5 °C</span>
                             </div>
-                            <input type="range" id="tempSlider" min="15" max="40" value="24.5" step="0.5" class="w-full accent-emerald-500 cursor-pointer" oninput="updateEnv()">
+                            <input type="range" id="tempSlider" min="5" max="50" value="24.5" step="0.5" class="w-full accent-emerald-500 cursor-pointer" oninput="onManualSliderChange()">
                         </div>
 
+                        <!-- Relative Humidity -->
                         <div>
                             <div class="flex justify-between text-xs font-medium mb-1">
                                 <span class="text-slate-400">Relative Humidity</span>
                                 <span id="rhValue" class="text-white font-bold">85 %</span>
                             </div>
-                            <input type="range" id="rhSlider" min="20" max="100" value="85" step="1" class="w-full accent-emerald-500 cursor-pointer" oninput="updateEnv()">
+                            <input type="range" id="rhSlider" min="5" max="100" value="85" step="1" class="w-full accent-emerald-500 cursor-pointer" oninput="onManualSliderChange()">
                         </div>
 
+                        <!-- Live Weather Details Row (shown in auto mode) -->
+                        <div id="weatherDetailsRow" class="grid grid-cols-3 gap-2">
+                            <div class="bg-slate-800/60 rounded-lg p-2 text-center">
+                                <span class="text-[10px] text-slate-400 uppercase block">Wind</span>
+                                <span id="weatherWind" class="text-xs text-white font-bold">-- km/h</span>
+                            </div>
+                            <div class="bg-slate-800/60 rounded-lg p-2 text-center">
+                                <span class="text-[10px] text-slate-400 uppercase block">Cloud Cover</span>
+                                <span id="weatherCloud" class="text-xs text-white font-bold">--%</span>
+                            </div>
+                            <div class="bg-slate-800/60 rounded-lg p-2 text-center">
+                                <span class="text-[10px] text-slate-400 uppercase block">Est. Lux</span>
+                                <span id="weatherLux" class="text-xs text-white font-bold">-- lx</span>
+                            </div>
+                        </div>
+
+                        <!-- Dew / Wetness -->
                         <div class="flex items-center justify-between pt-1">
                             <span class="text-xs text-slate-300 font-medium">Leaf Surface Dew / Wetness</span>
                             <input type="checkbox" id="dewCheck" checked class="w-4 h-4 accent-emerald-500 rounded cursor-pointer" onchange="updateEnv()">
@@ -541,6 +577,169 @@
             runDiagnosticScan();
         }
 
+        // ========== AUTO-WEATHER SYSTEM ==========
+        let weatherMode = 'auto';    // 'auto' or 'manual'
+        let autoWeatherData = null;  // cached weather data
+        let weatherRefreshTimer = null;
+
+        // Estimate lux from solar radiation (W/m2) and cloud cover
+        function estimateLux(solarRadiation, cloudCover) {
+            // ~120 lux per W/m2 for daylight, adjusted by cloud
+            if (solarRadiation <= 0) return 0;
+            const baseLux = solarRadiation * 120;
+            const cloudFactor = 1 - (cloudCover / 100) * 0.6;
+            return Math.round(baseLux * cloudFactor);
+        }
+
+        // Reverse geocode coordinates to a location name
+        async function reverseGeocode(lat, lon) {
+            try {
+                const resp = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&zoom=10&addressdetails=1`, {
+                    headers: { 'Accept-Language': 'en' }
+                });
+                const data = await resp.json();
+                const a = data.address || {};
+                const city = a.city || a.town || a.village || a.county || a.state_district || '';
+                const state = a.state || '';
+                if (city && state) return `${city}, ${state}`;
+                if (city) return city;
+                if (state) return state;
+                return `${lat.toFixed(2)}N, ${lon.toFixed(2)}E`;
+            } catch (e) {
+                return `${lat.toFixed(2)}N, ${lon.toFixed(2)}E`;
+            }
+        }
+
+        // Fetch current weather from Open-Meteo (free, no API key)
+        async function fetchWeather(lat, lon) {
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,cloud_cover,shortwave_radiation&timezone=auto`;
+            const resp = await fetch(url);
+            const data = await resp.json();
+            return data.current;
+        }
+
+        // Apply weather data to sliders and UI
+        function applyWeatherData(weather, locationName) {
+            autoWeatherData = weather;
+            const temp = weather.temperature_2m;
+            const rh = weather.relative_humidity_2m;
+            const wind = weather.wind_speed_10m;
+            const cloud = weather.cloud_cover;
+            const solar = weather.shortwave_radiation || 0;
+            const lux = estimateLux(solar, cloud);
+
+            // Set sliders
+            document.getElementById('tempSlider').value = temp;
+            document.getElementById('rhSlider').value = rh;
+
+            // Auto-set dew: if humidity > 85% and temp < 28, likely dew
+            document.getElementById('dewCheck').checked = (rh > 85 && temp < 28);
+
+            // Update extra weather info
+            document.getElementById('weatherWind').innerText = wind.toFixed(1) + ' km/h';
+            document.getElementById('weatherCloud').innerText = cloud + '%';
+            document.getElementById('weatherLux').innerText = lux > 0 ? lux.toLocaleString() + ' lx' : 'Night';
+
+            // Update location
+            document.getElementById('weatherLocation').innerText = locationName + ' (Live)';
+            document.getElementById('weatherSourceText').innerText = 'Live Weather';
+            document.getElementById('weatherSourceBadge').className = 'text-xs bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-800 flex items-center gap-1';
+
+            updateEnv();
+        }
+
+        // Main auto-weather initialization
+        async function initAutoWeather() {
+            document.getElementById('weatherSourceText').innerText = 'Detecting...';
+            document.getElementById('weatherLocation').innerText = 'Detecting your location...';
+
+            if (!navigator.geolocation) {
+                fallbackToManual('Geolocation not supported');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                async (pos) => {
+                    try {
+                        const lat = pos.coords.latitude;
+                        const lon = pos.coords.longitude;
+
+                        // Fetch weather and location name in parallel
+                        const [weather, locName] = await Promise.all([
+                            fetchWeather(lat, lon),
+                            reverseGeocode(lat, lon)
+                        ]);
+
+                        applyWeatherData(weather, locName);
+
+                        // Auto-refresh every 10 minutes
+                        if (weatherRefreshTimer) clearInterval(weatherRefreshTimer);
+                        weatherRefreshTimer = setInterval(async () => {
+                            if (weatherMode === 'auto') {
+                                try {
+                                    const w = await fetchWeather(lat, lon);
+                                    applyWeatherData(w, locName);
+                                } catch (e) { /* silent */ }
+                            }
+                        }, 10 * 60 * 1000);
+
+                    } catch (err) {
+                        fallbackToManual('Weather API error');
+                    }
+                },
+                (err) => {
+                    // User denied location or error
+                    let reason = 'Location unavailable';
+                    if (err.code === 1) reason = 'Location denied';
+                    if (err.code === 2) reason = 'Location unavailable';
+                    if (err.code === 3) reason = 'Location timeout';
+                    fallbackToManual(reason);
+                },
+                { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 }
+            );
+        }
+
+        function fallbackToManual(reason) {
+            weatherMode = 'manual';
+            document.getElementById('weatherSourceText').innerText = 'Manual';
+            document.getElementById('weatherSourceBadge').className = 'text-xs bg-amber-950 text-amber-300 px-2 py-0.5 rounded border border-amber-800 flex items-center gap-1';
+            document.getElementById('weatherLocation').innerText = reason + ' — using manual input';
+            document.getElementById('weatherToggleBtn').innerText = 'Auto';
+            document.getElementById('weatherDetailsRow').style.display = 'none';
+            updateEnv();
+        }
+
+        function toggleWeatherMode() {
+            if (weatherMode === 'auto') {
+                // Switch to manual
+                weatherMode = 'manual';
+                document.getElementById('weatherToggleBtn').innerText = 'Auto';
+                document.getElementById('weatherSourceText').innerText = 'Manual';
+                document.getElementById('weatherSourceBadge').className = 'text-xs bg-amber-950 text-amber-300 px-2 py-0.5 rounded border border-amber-800 flex items-center gap-1';
+                document.getElementById('weatherDetailsRow').style.display = 'none';
+            } else {
+                // Switch back to auto
+                weatherMode = 'auto';
+                document.getElementById('weatherToggleBtn').innerText = 'Manual';
+                document.getElementById('weatherSourceText').innerText = 'Reconnecting...';
+                document.getElementById('weatherDetailsRow').style.display = 'grid';
+                initAutoWeather();
+            }
+        }
+
+        // When user manually moves a slider, switch to manual mode
+        function onManualSliderChange() {
+            if (weatherMode === 'auto') {
+                weatherMode = 'manual';
+                document.getElementById('weatherToggleBtn').innerText = 'Auto';
+                document.getElementById('weatherSourceText').innerText = 'Manual Override';
+                document.getElementById('weatherSourceBadge').className = 'text-xs bg-amber-950 text-amber-300 px-2 py-0.5 rounded border border-amber-800 flex items-center gap-1';
+            }
+            updateEnv();
+        }
+
+        // ========== EXISTING LOGIC ==========
+
         function updateEnv() {
             const temp = parseFloat(document.getElementById('tempSlider').value);
             const rh = parseFloat(document.getElementById('rhSlider').value);
@@ -603,8 +802,10 @@
             }
         }
 
+        // Initialize: auto-fetch weather, then run scan
         updateEnv();
         runDiagnosticScan();
+        initAutoWeather();
     </script>
 </body>
 </html>
